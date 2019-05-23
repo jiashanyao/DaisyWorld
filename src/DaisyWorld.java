@@ -48,8 +48,8 @@ public class DaisyWorld {
         int numberOfSpaces = Params.EDGE * Params.EDGE;
         int numOfBlack = (int) (percentOfBlack * 0.01 * numberOfSpaces);
         int numOfWhite = (int) (percentOfWhite * 0.01 * numberOfSpaces);
-        randomlySeed(grid, remainingSpace, numOfBlack, Daisy.daisyType.BLACK, Params.ALBEDO_OF_BLACk);
-        randomlySeed(grid, remainingSpace, numOfWhite, Daisy.daisyType.WHITE, Params.ALBEDO_OF_WHITE);
+        randomlySeed(grid, remainingSpace, numOfBlack, Daisy.daisyType.BLACK, albedoOfBlack);
+        randomlySeed(grid, remainingSpace, numOfWhite, Daisy.daisyType.WHITE, albedoOfWhite);
     }
 
     private void randomlySeed(Patch[][] grid, LinkedList<int[]> remainingSpace,  int numberOfDaisies, Daisy.daisyType type, double albedo) {
