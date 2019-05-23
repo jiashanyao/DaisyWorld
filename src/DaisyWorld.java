@@ -16,6 +16,7 @@ public class DaisyWorld {
 
     private String scenario;
 
+    private double [][] grid;
 
     // initialize the daisy world
     public DaisyWorld(double startBlacks, double startWhites,
@@ -27,6 +28,7 @@ public class DaisyWorld {
         this.albedoOfWhite = albedoOfWhite;
         this.solarLuminosity = solarLuminosity;
         this.scenario = scenario;
+        this.grid = new double[Params.EDGE][Params.EDGE];
     }
 
     public void run() {
