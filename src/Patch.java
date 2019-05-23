@@ -9,8 +9,13 @@ public class Patch {
     //the daisy on this patch
     private Daisy daisy;
 
+    public Patch(){
+        temperature = 0;
+        daisy = null;
+    }
+
     //calculate the temperature of this patch
-    public void calTemp(double albedoOfSurface, double solarLuminosity) {
+    public void calTemp(double solarLuminosity) {
         // the absorbed luminosity by this patch
         double absorbedLuminosity = 0;
         double localHeating = 0;
@@ -24,7 +29,7 @@ public class Patch {
         else {
             absorbedLuminosity = (1 - daisy.getAlbedo()) * solarLuminosity;
         }
-        // calculate the local heating
+        // calculate the local heating complying with the NetLogo code
         if (absorbedLuminosity > 0) {
             localHeating = 72 * Math.log(absorbedLuminosity) + 80;
         }

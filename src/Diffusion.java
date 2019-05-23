@@ -1,6 +1,6 @@
 public class Diffusion {
 
-    static void diffuse(double[][] grid, double diffusionRatio) {
+    static void diffuse(Patch[][] grid, double diffusionRatio) {
         double[][] gridDelta = new double[Params.EDGE][Params.EDGE];
 
         //In default the temp will not change, so the change condition will be 0.
@@ -11,7 +11,7 @@ public class Diffusion {
         //For each patch would be changed, implement its modification
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++)
-                calculateShares(grid[i][j], gridDelta, i, j, diffusionRatio);
+                calculateShares(grid[i][j].getTemperature(), gridDelta, i, j, diffusionRatio);
         }
         applyShares(gridDelta, grid, diffusionRatio);
     }
@@ -93,28 +93,29 @@ public class Diffusion {
     }
 
     //Firstly calculate the remaining temperature, then append modification to its remaining temperature
-    static void applyShares(double[][] gridDelta, double[][] grid, double diffusionRatio) {
+    static void applyShares(double[][] gridDelta, Patch[][] grid, double diffusionRatio) {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                grid[i][j] *= (1 - diffusionRatio);
-                grid[i][j] += gridDelta[i][j];
+                double newTemperature = grid[i][j].getTemperature() * (1 - diffusionRatio) + gridDelta[i][j];
+                grid[i][j].setTemperature(newTemperature);
             }
         }
     }
 
     public static void main(String[] args) {
-        double [][] temperatureArray = new double[Params.EDGE][Params.EDGE];
+        Patch [][] grid = new Patch[Params.EDGE][Params.EDGE];
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                temperatureArray[i][j] = 0;
+                grid[i][j] = new Patch();
+                grid[i][j].setTemperature(-10);
             }
         }
-        temperatureArray[15][15] = 200;
-        for (int k = 0; k < 2; k++)
-            diffuse(temperatureArray, 0.5);
+        grid[5][5].setTemperature(0);
+        for (int k = 0; k < 3; k++)
+            diffuse(grid, 0.5);
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                System.out.print(temperatureArray[i][j] + " ");
+                System.out.print(grid[i][j].getTemperature() + " ");
             }
             System.out.println();
         }

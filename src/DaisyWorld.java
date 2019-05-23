@@ -7,6 +7,7 @@ import java.util.Random;
  * how much energy they absorb as heat from sunlight.
  */
 public class DaisyWorld {
+
     // start percentage of daisies
     private double startBlacks;
     private double startWhites;
@@ -17,21 +18,17 @@ public class DaisyWorld {
 
     private double solarLuminosity;
 
-    private String scenario;
-
     private Patch [][] grid;
 
     // initialize the daisy world
-    public DaisyWorld(double startBlacks, double startWhites,
-            double albedoOfBlack, double albedoOfWhite,
-            double solarLuminosity, String scenario) {
-        this.startBlacks = startBlacks;
-        this.startWhites = startWhites;
-        this.albedoOfBlack = albedoOfBlack;
-        this.albedoOfWhite = albedoOfWhite;
-        this.solarLuminosity = solarLuminosity;
-        this.scenario = scenario;
+    DaisyWorld() {
+        this.startBlacks = Params.START_BLACK;
+        this.startWhites = Params.START_WHITE;
+        this.albedoOfBlack = Params.ALBEDO_OF_BLACk;
+        this.albedoOfWhite = Params.ALBEDO_OF_WHITE;
+        this.solarLuminosity = Params.SOLAR_LUMINOSITY;
         this.grid = new Patch[Params.EDGE][Params.EDGE];
+        // Initialize grid
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
                 grid[i][j] = new Patch();
@@ -51,7 +48,6 @@ public class DaisyWorld {
         int numberOfSpaces = Params.EDGE * Params.EDGE;
         int numOfBlack = (int) (percentOfBlack * 0.01 * numberOfSpaces);
         int numOfWhite = (int) (percentOfWhite * 0.01 * numberOfSpaces);
-        //type 1 = black flower, type 2 = white flower
         randomlySeed(grid, remainingSpace, numOfBlack, Daisy.daisyType.BLACK, Params.ALBEDO_OF_BLACk);
         randomlySeed(grid, remainingSpace, numOfWhite, Daisy.daisyType.WHITE, Params.ALBEDO_OF_WHITE);
     }
@@ -68,15 +64,29 @@ public class DaisyWorld {
         }
     }
 
-    public static void main(String[] args) {
-        DaisyWorld earth = new DaisyWorld(Params.START_BLACK, Params.START_WHITE, Params.ALBEDO_OF_BLACk, Params.ALBEDO_OF_WHITE, Params.OUR, "");
-        earth.seedDaisies(earth.grid, Params.START_BLACK, Params.START_WHITE);
+    private void tick() {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                if (earth.grid[i][j].getDaisy() != null)
-                    System.out.print(earth.grid[i][j].getDaisy().getType() + " " + earth.grid[i][j].getDaisy().getAge() + " ");
-                else
-                    System.out.print("   Null   ");
+                grid[i][j].calTemp(solarLuminosity);
+            }
+        }
+        Diffusion.diffuse(grid, Params.DIFFUSION_RATIO);
+        //TODO: daisies die and regenerate
+    }
+
+    public void run() {
+        seedDaisies(grid, Params.START_BLACK, Params.START_WHITE);
+        for (int t = 0; t < Params.TICKS; t++) {
+            tick();
+        }
+    }
+    public static void main(String[] args) {
+        DaisyWorld earth = new DaisyWorld();
+        earth.run();
+        Patch[][] grid = earth.grid;
+        for (int i = 0; i < Params.EDGE; i++) {
+            for (int j = 0; j < Params.EDGE; j++) {
+                System.out.printf("%.2f ", grid[i][j].getTemperature());
             }
             System.out.println();
         }
