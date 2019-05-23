@@ -1,5 +1,4 @@
 public class Diffusable {
-    static double[][] temperatureArray;
 
     static void diffuseTemp(double[][] temperatureArray, double transferCoefficient) {
         double[][] deltaTemp = new double[Params.EDGE][Params.EDGE];
@@ -104,6 +103,20 @@ public class Diffusable {
     }
 
     public static void main(String[] args) {
-        temperatureArray = new double[Params.EDGE][Params.EDGE];
+        double [][] temperatureArray = new double[Params.EDGE][Params.EDGE];
+        for (int i = 0; i < Params.EDGE; i++) {
+            for (int j = 0; j < Params.EDGE; j++) {
+                temperatureArray[i][j] = 0;
+            }
+        }
+        temperatureArray[15][15] = 200;
+        for (int k = 0; k < 100; k++)
+            diffuseTemp(temperatureArray, 0.5);
+        for (int i = 0; i < Params.EDGE; i++) {
+            for (int j = 0; j < Params.EDGE; j++) {
+                System.out.print(temperatureArray[i][j] + " ");
+            }
+            System.out.println();
+        }
     }
 }
