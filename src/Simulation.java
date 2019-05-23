@@ -36,7 +36,7 @@ public class Simulation {
             DaisyWorld earth = new DaisyWorld(Params.START_BLACK, Params.START_WHITE,
                     Params.ALBEDO_OF_BLACk, Params.ALBEDO_OF_WHITE, solarLuminosity,
                     scenario);
-            earth.run();
+//            earth.run();
         }
     }
 }

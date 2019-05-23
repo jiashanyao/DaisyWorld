@@ -1,40 +1,39 @@
 import java.util.LinkedList;
 import java.util.Random;
 
-public class Createflower {
+public class Setup {
 
-    static void createFlowers(int[][] flowerArray, double perCentOfBlack, double perCentOfWhite) {
+    static void seedDaisies(int[][] grid, double percentOfBlack, double percentOfWhite) {
         LinkedList<int[]> remainingSpace = new LinkedList<>();
-        //initialize the space as empty (0)
+        //initialize the remainingSpace as a list of 2-int-arrays, each of which represents a patch coordinate in the grid
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                flowerArray[i][j] = 0;
                 remainingSpace.add(new int[]{i, j});
             }
         }
 
         int numberOfSpaces = Params.EDGE * Params.EDGE;
-        int numOfBlack = (int) (perCentOfBlack * 0.01 * numberOfSpaces);
-        int numOfWhite = (int) (perCentOfWhite * 0.01 * numberOfSpaces);
+        int numOfBlack = (int) (percentOfBlack * 0.01 * numberOfSpaces);
+        int numOfWhite = (int) (percentOfWhite * 0.01 * numberOfSpaces);
         //type 1 = black flower, type 2 = white flower
-        generateFlowersInWorld(flowerArray, remainingSpace, 1, numOfBlack);
-        generateFlowersInWorld(flowerArray, remainingSpace, 2, numOfWhite);
+        generateFlowersInWorld(grid, remainingSpace, 1, numOfBlack);
+        generateFlowersInWorld(grid, remainingSpace, 2, numOfWhite);
     }
 
-    static void generateFlowersInWorld(int[][] flowerArray, LinkedList<int[]> remainingSpace, int typeOfFlower, int numberOfFlowers) {
+    static void generateFlowersInWorld(int[][] grid, LinkedList<int[]> remainingSpace, int typeOfFlower, int numberOfFlowers) {
+        Random random = new Random();
         while (numberOfFlowers > 0) {
             int maxRandom = remainingSpace.size();
-            Random random = new Random();
             int chosenOne = random.nextInt(maxRandom);
             int[] addingIndex = remainingSpace.remove(chosenOne);
-            flowerArray[addingIndex[0]][addingIndex[1]] = typeOfFlower;
+            grid[addingIndex[0]][addingIndex[1]] = typeOfFlower;
             numberOfFlowers--;
         }
     }
 
     public static void main(String[] args) {
         int[][] flowerArray = new int[Params.EDGE][Params.EDGE];
-        createFlowers(flowerArray, Params.START_BLACK, Params.START_WHITE);
+        seedDaisies(flowerArray, Params.START_BLACK, Params.START_WHITE);
         for (int i = 0; i < Params.EDGE; i++) {
             System.out.println();
             for (int j = 0; j < Params.EDGE; j++) {

@@ -1,15 +1,15 @@
 public class Params {
     // initial percentage of black daisies
-    public static double START_BLACK = 50;
+    public static double START_BLACK = 20;
     // initial percentage of white daisies
-    public static double START_WHITE = 50;
+    public static double START_WHITE = 20;
 
     public static double ALBEDO_OF_WHITE;
     public static double ALBEDO_OF_BLACk;
     public static double ALBEDO_Of_SURFACE;
 
     // the max age of daisies
-    public static int MAX_AGE;
+    public static int MAX_AGE = 25;
 
     // the solar luminosity in different scenarios
     public static Double RAMP = 0.8;
@@ -21,5 +21,5 @@ public class Params {
     public static int ticks;
 
     // edge length of daisy world
-    public static int EDGE = 30;
+    public static int EDGE = 10;
 }
