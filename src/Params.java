@@ -19,4 +19,7 @@ public class Params {
 
     // max ticks of the daisy world
     public static int ticks;
+
+    // edge length of daisy world
+    public static int EDGE = 30;
 }
