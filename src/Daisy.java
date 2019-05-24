@@ -29,7 +29,7 @@ public class Daisy {
     }
 
     public void growOld() {
-        age --;
+        age ++;
     }
 
     //get the albedo of daisy

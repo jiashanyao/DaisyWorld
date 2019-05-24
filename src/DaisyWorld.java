@@ -9,8 +9,8 @@ import java.util.Random;
 public class DaisyWorld {
 
     // start percentage of daisies
-    private double startBlacks;
-    private double startWhites;
+    private double startBlack;
+    private double startWhite;
 
     // the albedo of daisies
     private double albedoOfBlack;
@@ -22,8 +22,8 @@ public class DaisyWorld {
 
     // initialize the daisy world
     DaisyWorld() {
-        this.startBlacks = Params.START_BLACK;
-        this.startWhites = Params.START_WHITE;
+        this.startBlack = Params.START_BLACK;
+        this.startWhite = Params.START_WHITE;
         this.albedoOfBlack = Params.ALBEDO_OF_BLACk;
         this.albedoOfWhite = Params.ALBEDO_OF_WHITE;
         this.solarLuminosity = Params.SOLAR_LUMINOSITY;
@@ -58,7 +58,7 @@ public class DaisyWorld {
             int maxRandom = remainingSpace.size();
             int chosenIndex = random.nextInt(maxRandom);
             int[] addingIndex = remainingSpace.remove(chosenIndex);
-            int age = random.nextInt(Params.MAX_AGE) + 1;
+            int age = random.nextInt(Params.MAX_AGE);
             grid[addingIndex[0]][addingIndex[1]].setDaisy(new Daisy(type, albedo, age));
             numberOfDaisies--;
         }
@@ -72,16 +72,16 @@ public class DaisyWorld {
             }
         }
         // Diffuse
-        Diffusion.diffuse(grid, Params.DIFFUSION_RATIO);
+        Util.diffuse(grid, Params.DIFFUSION_RATIO);
         // Age and die
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
                 Patch patch = grid[i][j];
                 if (patch.getDaisy() != null) {
-                    if (patch.getDaisy().getAge() < 1) {
-                        patch.setDaisy(null);       // die
-                    } else {
+                    if (patch.getDaisy().getAge() < Params.MAX_AGE) {
                         patch.getDaisy().growOld(); // age
+                    } else {
+                        patch.setDaisy(null);       // die
                     }
                 }
             }
@@ -91,7 +91,7 @@ public class DaisyWorld {
     }
 
     public void run() {
-        seedDaisies(grid, Params.START_BLACK, Params.START_WHITE);
+        seedDaisies(grid, startBlack, startWhite);
         for (int t = 0; t < Params.TICKS; t++) {
             tick();
         }

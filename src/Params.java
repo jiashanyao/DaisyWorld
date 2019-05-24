@@ -20,6 +20,6 @@ public class Params {
     // edge length of daisy world
     public static int EDGE = 10;
 
-    // Diffusion ratio
+    // Util ratio
     public static double DIFFUSION_RATIO = 0.5;
 }
