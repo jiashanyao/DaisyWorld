@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class Util {
 
-    static void diffuse(Patch[][] grid, double diffusionRatio) {
+    public static void diffuse(Patch[][] grid, double diffusionRatio) {
         double[][] gridDelta = new double[Params.EDGE][Params.EDGE];
 
         //In default the temp will not change, so the change condition will be 0.
@@ -19,80 +19,16 @@ public class Util {
         applyShares(gridDelta, grid, diffusionRatio);
     }
 
-    static void calculateShares(double patchValue, double[][] gridDelta, int x, int y, double diffusionRatio) {
+    private static void calculateShares(double patchValue, double[][] gridDelta, int x, int y, double diffusionRatio) {
         double deltaTemp = diffusionRatio / 8 * patchValue;
-        if (x > 0 && x < Params.EDGE - 1) {
-            if (y > 0 && y < Params.EDGE - 1) {
-                gridDelta[x - 1][y - 1] += deltaTemp;
-                gridDelta[x - 1][y] += deltaTemp;
-                gridDelta[x - 1][y + 1] += deltaTemp;
-                gridDelta[x][y - 1] += deltaTemp;
-                gridDelta[x][y + 1] += deltaTemp;
-                gridDelta[x + 1][y - 1] += deltaTemp;
-                gridDelta[x + 1][y] += deltaTemp;
-                gridDelta[x + 1][y + 1] += deltaTemp;
-            }
-            if (y == 0) {
-                gridDelta[x - 1][y] += deltaTemp;
-                gridDelta[x - 1][y + 1] += deltaTemp;
-                gridDelta[x][y + 1] += deltaTemp;
-                gridDelta[x + 1][y] += deltaTemp;
-                gridDelta[x + 1][y + 1] += deltaTemp;
-                gridDelta[x][y] += 3 * deltaTemp;
-            }
-            if (y == Params.EDGE - 1) {
-                gridDelta[x - 1][y - 1] += deltaTemp;
-                gridDelta[x - 1][y] += deltaTemp;
-                gridDelta[x][y - 1] += deltaTemp;
-                gridDelta[x + 1][y - 1] += deltaTemp;
-                gridDelta[x + 1][y] += deltaTemp;
-                gridDelta[x][y] += 3 * deltaTemp;
-            }
-        }
-        if (x == 0) {
-            if (y > 0 && y < Params.EDGE - 1) {
-                gridDelta[x][y - 1] += deltaTemp;
-                gridDelta[x][y + 1] += deltaTemp;
-                gridDelta[x + 1][y - 1] += deltaTemp;
-                gridDelta[x + 1][y] += deltaTemp;
-                gridDelta[x + 1][y + 1] += deltaTemp;
-                gridDelta[x][y] += 3 * deltaTemp;
-            }
-            if (y == 0) {
-                gridDelta[0][1] += deltaTemp;
-                gridDelta[1][0] += deltaTemp;
-                gridDelta[1][1] += deltaTemp;
-                gridDelta[x][y] += 5 * deltaTemp;
-            }
-            if (y == Params.EDGE - 1) {
-                gridDelta[0][y - 1] += deltaTemp;
-                gridDelta[1][y - 1] += deltaTemp;
-                gridDelta[1][y] += deltaTemp;
-                gridDelta[x][y] += 5 * deltaTemp;
-            }
-        }
-        if (x == Params.EDGE - 1) {
-            if (y > 0 && y < Params.EDGE - 1) {
-                gridDelta[x - 1][y - 1] += deltaTemp;
-                gridDelta[x - 1][y] += deltaTemp;
-                gridDelta[x - 1][y + 1] += deltaTemp;
-                gridDelta[x][y - 1] += deltaTemp;
-                gridDelta[x][y + 1] += deltaTemp;
-                gridDelta[x][y] += 3 * deltaTemp;
-            }
-            if (y == 0) {
-                gridDelta[x - 1][y] += deltaTemp;
-                gridDelta[x - 1][y + 1] += deltaTemp;
-                gridDelta[x][y + 1] += deltaTemp;
-                gridDelta[x][y] += 5 * deltaTemp;
-            }
-            if (y == Params.EDGE - 1) {
-                gridDelta[x - 1][y - 1] += deltaTemp;
-                gridDelta[x - 1][y] += deltaTemp;
-                gridDelta[x][y - 1] += deltaTemp;
-                gridDelta[x][y] += 5 * deltaTemp;
-            }
-        }
+        gridDelta[wrap(x - 1)][wrap(y - 1)] += deltaTemp;
+        gridDelta[wrap(x - 1)][wrap(y)] += deltaTemp;
+        gridDelta[wrap(x - 1)][wrap(y + 1)] += deltaTemp;
+        gridDelta[wrap(x)][wrap(y - 1)] += deltaTemp;
+        gridDelta[wrap(x)][wrap(y + 1)] += deltaTemp;
+        gridDelta[wrap(x + 1)][wrap(y - 1)] += deltaTemp;
+        gridDelta[wrap(x + 1)][wrap(y)] += deltaTemp;
+        gridDelta[wrap(x + 1)][wrap(y + 1)] += deltaTemp;
     }
 
     //Firstly calculate the remaining temperature, then append modification to its remaining temperature
@@ -105,7 +41,7 @@ public class Util {
         }
     }
 
-    static void regenerate(Patch[][] grid) {
+    public static void regenerate(Patch[][] grid) {
         // Records if a patch sprouts a daisy in the grid
         Daisy[][] sproutGrid = new Daisy[Params.EDGE][Params.EDGE];
         Random random = new Random();
@@ -113,27 +49,9 @@ public class Util {
         // For patches that are not located on edges
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                Daisy parent = grid[i][j].getDaisy();
-                if (parent != null) {
-                    LinkedList<int[]> neighbors = new LinkedList<>();
-                    addIfNoDaisy(neighbors, wrap(i - 1, j - 1), grid);
-                    addIfNoDaisy(neighbors, wrap(i - 1, j), grid);
-                    addIfNoDaisy(neighbors, wrap(i - 1, j + 1), grid);
-                    addIfNoDaisy(neighbors, wrap(i, j + 1), grid);
-                    addIfNoDaisy(neighbors, wrap(i + 1, j + 1), grid);
-                    addIfNoDaisy(neighbors, wrap(i + 1, j), grid);
-                    addIfNoDaisy(neighbors, wrap(i + 1, j - 1), grid);
-                    addIfNoDaisy(neighbors, wrap(i, j - 1), grid);
-                    if (neighbors.size() > 0) {
-                        int[] sproutCoor = neighbors.get(random.nextInt(neighbors.size()));
-                        int age = random.nextInt(Params.MAX_AGE);
-                        // Inherits from parent's type, albedo. Age is randomized.
-                        sproutGrid[sproutCoor[0]][sproutCoor[1]] = new Daisy(parent.getType(), parent.getAlbedo(), age);
-                    }
-                }
+                sprout(grid, sproutGrid, i, j);
             }
         }
-
         // Applies the sprouted daisies to the original grid
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
@@ -144,23 +62,40 @@ public class Util {
         }
     }
 
-    private static int[] wrap(int i, int j) {
-        if (i < 0) {
-            i = Params.EDGE - 1;
-        } else if (i >= Params.EDGE) {
-            i = 0;
+    private static void sprout(Patch[][] grid, Daisy[][] sproutGrid, int i, int j) {
+        Daisy parent = grid[i][j].getDaisy();
+        if (parent != null) {
+            LinkedList<int[]> neighbors = new LinkedList<>();
+            addIfNoDaisy(neighbors, wrap(i - 1), wrap(j - 1), grid);
+            addIfNoDaisy(neighbors, wrap(i - 1), wrap(j), grid);
+            addIfNoDaisy(neighbors, wrap(i - 1), wrap(j + 1), grid);
+            addIfNoDaisy(neighbors, wrap(i), wrap(j + 1), grid);
+            addIfNoDaisy(neighbors, wrap(i + 1), wrap(j + 1), grid);
+            addIfNoDaisy(neighbors, wrap(i + 1), wrap(j), grid);
+            addIfNoDaisy(neighbors, wrap(i + 1), wrap(j - 1), grid);
+            addIfNoDaisy(neighbors, wrap(i), wrap(j - 1), grid);
+            if (neighbors.size() > 0) {
+                Random random = new Random();
+                int[] sproutCoor = neighbors.get(random.nextInt(neighbors.size()));
+                int age = random.nextInt(Params.MAX_AGE);
+                // Inherits from parent's type, albedo. Age is randomized.
+                sproutGrid[sproutCoor[0]][sproutCoor[1]] = new Daisy(parent.getType(), parent.getAlbedo(), age);
+            }
         }
-        if (j < 0) {
-            j = Params.EDGE - 1;
-        } else if (j >= Params.EDGE) {
-            j = 0;
+    }
+    private static int wrap(int coordinate) {
+        if (coordinate < 0) {
+            return Params.EDGE - 1;
+        } else if (coordinate >= Params.EDGE) {
+            return  0;
+        } else {
+            return coordinate;
         }
-        return new int[] {i, j};
     }
 
-    private static void addIfNoDaisy(LinkedList<int[]> neighbors, int[] coordinates, Patch[][] grid) {
-        if (grid[coordinates[0]][coordinates[1]].getDaisy() == null) {
-            neighbors.add(coordinates);
+    private static void addIfNoDaisy(LinkedList<int[]> neighbors, int x, int y, Patch[][] grid) {
+        if (grid[x][y].getDaisy() == null) {
+            neighbors.add(new int[] {x, y});
         }
     }
 
@@ -171,14 +106,14 @@ public class Util {
                 grid[i][j] = new Patch();
             }
         }
-        grid[9][5].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
+        grid[0][0].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
         for (int k = 0; k < 5; k++) {
             regenerate(grid);
             for (int i = 0; i < Params.EDGE; i++) {
                 for (int j = 0; j < Params.EDGE; j++) {
                     Daisy daisy = grid[i][j].getDaisy();
                     if (daisy != null) {
-                        System.out.print(daisy.getType() + " ");
+                        System.out.print(grid[i][j].getDaisy().getType() + " ");
                     } else {
                         System.out.print("null  ");
                     }
