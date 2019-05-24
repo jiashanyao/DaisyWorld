@@ -65,13 +65,29 @@ public class DaisyWorld {
     }
 
     private void tick() {
+        // Absorb energy
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
                 grid[i][j].calTemp(solarLuminosity);
             }
         }
+        // Diffuse
         Diffusion.diffuse(grid, Params.DIFFUSION_RATIO);
-        //TODO: daisies die and regenerate
+        // Age and die
+        for (int i = 0; i < Params.EDGE; i++) {
+            for (int j = 0; j < Params.EDGE; j++) {
+                Patch patch = grid[i][j];
+                if (patch.getDaisy() != null) {
+                    if (patch.getDaisy().getAge() < 1) {
+                        patch.setDaisy(null);       // die
+                    } else {
+                        patch.getDaisy().growOld(); // age
+                    }
+                }
+            }
+        }
+        // Check regenerate
+
     }
 
     public void run() {
@@ -86,7 +102,7 @@ public class DaisyWorld {
         Patch[][] grid = earth.grid;
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                System.out.printf("%.2f ", grid[i][j].getTemperature());
+                System.out.print(grid[i][j].getDaisy());
             }
             System.out.println();
         }

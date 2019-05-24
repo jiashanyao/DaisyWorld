@@ -28,9 +28,8 @@ public class Daisy {
         return age;
     }
 
-    //set the age of daisy
-    public void setAge(int age) {
-        this.age = age;
+    public void growOld() {
+        age --;
     }
 
     //get the albedo of daisy

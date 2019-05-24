@@ -49,10 +49,6 @@ public class Patch {
         this.daisy = daisy;
     }
 
-    public void dieDaisy() {
-        this.daisy = null;
-    }
-
     public double getTemperature() {
         return temperature;
     }

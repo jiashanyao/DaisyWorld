@@ -15,7 +15,7 @@ public class Params {
     public static Double SOLAR_LUMINOSITY = 0.8;
 
     // max ticks of the daisy world
-    public static int TICKS = 5;
+    public static int TICKS = 25;
 
     // edge length of daisy world
     public static int EDGE = 10;
