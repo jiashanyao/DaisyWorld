@@ -63,8 +63,12 @@ public class Util {
     }
 
     private static void sprout(Patch[][] grid, Daisy[][] sproutGrid, int i, int j) {
+        double temperature = grid[i][j].getTemperature();
+        double seedThreshold = (0.1457 * temperature) - (0.0032 * (temperature * temperature)) - 0.6443;
+        Random random = new Random();
+        double survivability = random.nextDouble();
         Daisy parent = grid[i][j].getDaisy();
-        if (parent != null) {
+        if (parent != null && survivability < seedThreshold) {
             LinkedList<int[]> neighbors = new LinkedList<>();
             addIfNoDaisy(neighbors, wrap(i - 1), wrap(j - 1), grid);
             addIfNoDaisy(neighbors, wrap(i - 1), wrap(j), grid);
@@ -75,7 +79,6 @@ public class Util {
             addIfNoDaisy(neighbors, wrap(i + 1), wrap(j - 1), grid);
             addIfNoDaisy(neighbors, wrap(i), wrap(j - 1), grid);
             if (neighbors.size() > 0) {
-                Random random = new Random();
                 int[] sproutCoor = neighbors.get(random.nextInt(neighbors.size()));
                 int age = random.nextInt(Params.MAX_AGE);
                 // Inherits from parent's type, albedo. Age is randomized.
@@ -83,6 +86,7 @@ public class Util {
             }
         }
     }
+
     private static int wrap(int coordinate) {
         if (coordinate < 0) {
             return Params.EDGE - 1;
@@ -104,6 +108,7 @@ public class Util {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
                 grid[i][j] = new Patch();
+                grid[i][j].setTemperature(7);
             }
         }
         grid[0][0].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));

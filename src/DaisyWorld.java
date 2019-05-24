@@ -86,7 +86,8 @@ public class DaisyWorld {
                 }
             }
         }
-        // Check regenerate
+        // Regenerate
+        Util.regenerate(grid);
 
     }
 
