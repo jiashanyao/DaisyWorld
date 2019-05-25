@@ -183,10 +183,10 @@ public class DaisyWorld {
                 Params.START_BLACK, Params.START_WHITE,
                 Params.ALBEDO_OF_BLACk, Params.ALBEDO_OF_WHITE,
                 Params.ALBEDO_Of_SURFACE, Params.SOLAR_LUMINOSITY);
-        earth.printGrid();
+//        earth.printGrid();
         for (int t = 0; t < Params.TICKS; t++) {
             earth.tick();
-            System.out.println();
+//            System.out.println();
 //            earth.printGrid();
         }
         System.out.println(earth.getGlobalTempRecord());

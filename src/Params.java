@@ -1,8 +1,8 @@
 public class Params {
     // initial percentage of black daisies
-    public static double START_BLACK = 20;
+    public static double START_BLACK = 0.2;
     // initial percentage of white daisies
-    public static double START_WHITE = 20;
+    public static double START_WHITE = 0.2;
 
     public static double ALBEDO_OF_WHITE = 0.75;
     public static double ALBEDO_OF_BLACk = 0.25;
