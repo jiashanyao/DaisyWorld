@@ -171,7 +171,7 @@ public class DaisyWorld {
                     }
                     System.out.printf("%6.2f |", patch.getTemperature());
                 } else {
-                    System.out.print("\u25A1        |");
+                    System.out.print("         |");
                 }
             }
             System.out.println();
@@ -182,7 +182,7 @@ public class DaisyWorld {
         DaisyWorld earth = new DaisyWorld(0.2, 0.2,
                 0.25, 0.75, 0.4, 0.8);
         earth.printGrid();
-        for (int t = 0; t < 200; t++) {
+        for (int t = 0; t < 2; t++) {
             earth.tick();
             System.out.println();
             earth.printGrid();
