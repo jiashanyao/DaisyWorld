@@ -171,7 +171,7 @@ public class DaisyWorld {
                     }
                     System.out.printf("%6.2f |", patch.getTemperature());
                 } else {
-                    System.out.print("         |");
+                    System.out.printf("  %6.2f |", patch.getTemperature());
                 }
             }
             System.out.println();
