@@ -185,7 +185,7 @@ public class DaisyWorld {
         for (int t = 0; t < 200; t++) {
             earth.tick();
             System.out.println();
-            earth.printGrid();
+//            earth.printGrid();
         }
         System.out.println(earth.getGlobalTempRecord());
         System.out.println(earth.getBlackPopulation());

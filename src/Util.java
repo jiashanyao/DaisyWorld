@@ -86,9 +86,8 @@ public class Util {
                 if (sproutGrid[sproutCoor[0]][sproutCoor[1]] == null) {
                     sproutGrid[sproutCoor[0]][sproutCoor[1]] = new ArrayList<>();
                 }
-                int age = random.nextInt(Params.MAX_AGE);
-                // Baby daisy inherits from parent's type, albedo. Age is randomized.
-                Daisy babyDaisy = new Daisy(parent.getType(), parent.getAlbedo(), age);
+                // Baby daisy inherits from parent's type, albedo. Age is 0.
+                Daisy babyDaisy = new Daisy(parent.getType(), parent.getAlbedo(), 0);
                 // Adds the baby to a list of baby candidates for that patch.
                 sproutGrid[sproutCoor[0]][sproutCoor[1]].add(babyDaisy);
             }
