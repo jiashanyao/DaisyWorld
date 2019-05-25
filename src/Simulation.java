@@ -13,8 +13,8 @@ public class Simulation {
             System.out.println("Invalid!");
         }
         else {
-            DaisyWorld earth = new DaisyWorld();
-            earth.run();
+//            DaisyWorld earth = new DaisyWorld();
+//            earth.tick();
         }
     }
 }

@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -8,32 +9,58 @@ import java.util.Random;
  */
 public class DaisyWorld {
 
-    // start percentage of daisies
     private double startBlack;
     private double startWhite;
 
-    // the albedo of daisies
     private double albedoOfBlack;
     private double albedoOfWhite;
-
+    private double albedoOfSurface;
     private double solarLuminosity;
+
+    private ArrayList<Double> globalTempRecord;
+
+    private ArrayList<Integer> blackPopulation;
+
+    private ArrayList<Integer> whitePopulation;
 
     private Patch [][] grid;
 
     // initialize the daisy world
-    DaisyWorld() {
-        this.startBlack = Params.START_BLACK;
-        this.startWhite = Params.START_WHITE;
-        this.albedoOfBlack = Params.ALBEDO_OF_BLACk;
-        this.albedoOfWhite = Params.ALBEDO_OF_WHITE;
-        this.solarLuminosity = Params.SOLAR_LUMINOSITY;
-        this.grid = new Patch[Params.EDGE][Params.EDGE];
+    public DaisyWorld(double startBlack, double startWhite, double albedoOfBlack,
+               double albedoOfWhite, double albedoOfSurface, double solarLuminosity) {
+        this.startBlack = startBlack;
+        this.startWhite = startWhite;
+        this.albedoOfBlack = albedoOfBlack;
+        this.albedoOfWhite = albedoOfWhite;
+        this.albedoOfSurface = albedoOfSurface;
+        this.solarLuminosity = solarLuminosity;
+        grid = new Patch[Params.EDGE][Params.EDGE];
         // Initialize grid
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
                 grid[i][j] = new Patch();
             }
         }
+        // Initialize global temperature and black and white population record
+        globalTempRecord = new ArrayList<>();
+        globalTempRecord.add(0.0);
+        blackPopulation = new ArrayList<>();
+        whitePopulation = new ArrayList<>();
+        // Seed daisies
+        seedDaisies(grid, this.startBlack, this.startWhite);
+        recordPopulation();
+    }
+
+    public ArrayList<Double> getGlobalTempRecord() {
+        return globalTempRecord;
+    }
+
+    public ArrayList<Integer> getBlackPopulation() {
+        return blackPopulation;
+    }
+
+    public ArrayList<Integer> getWhitePopulation() {
+        return whitePopulation;
     }
 
     private void seedDaisies(Patch[][] grid, double percentOfBlack, double percentOfWhite) {
@@ -46,8 +73,8 @@ public class DaisyWorld {
         }
 
         int numberOfSpaces = Params.EDGE * Params.EDGE;
-        int numOfBlack = (int) (percentOfBlack * 0.01 * numberOfSpaces);
-        int numOfWhite = (int) (percentOfWhite * 0.01 * numberOfSpaces);
+        int numOfBlack = (int) (percentOfBlack * numberOfSpaces);
+        int numOfWhite = (int) (percentOfWhite * numberOfSpaces);
         randomlySeed(grid, remainingSpace, numOfBlack, Daisy.daisyType.BLACK, albedoOfBlack);
         randomlySeed(grid, remainingSpace, numOfWhite, Daisy.daisyType.WHITE, albedoOfWhite);
     }
@@ -64,15 +91,44 @@ public class DaisyWorld {
         }
     }
 
-    private void tick() {
-        // Absorb energy
+    private void absorb() {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                grid[i][j].calTemp(solarLuminosity);
+                grid[i][j].calTemp(solarLuminosity, albedoOfSurface);
             }
         }
-        // Diffuse
-        Util.diffuse(grid, Params.DIFFUSION_RATIO);
+    }
+
+    private void recordGlobalTemp() {
+        double totalTemperature = 0;
+        for (int i = 0; i < Params.EDGE; i++) {
+            for (int j = 0; j < Params.EDGE; j++) {
+                totalTemperature += grid[i][j].getTemperature();
+            }
+        }
+        Double currentGlobalTemp = totalTemperature / (Params.EDGE * Params.EDGE);
+        globalTempRecord.add(currentGlobalTemp);
+    }
+
+    private void recordPopulation() {
+        int black = 0, white = 0;
+        for (int i = 0; i < Params.EDGE; i++) {
+            for (int j = 0; j < Params.EDGE; j++) {
+                Daisy daisy = grid[i][j].getDaisy();
+                if (daisy != null) {
+                    if (daisy.getType() == Daisy.daisyType.BLACK) {
+                        black ++;
+                    } else {
+                        white ++;
+                    }
+                }
+            }
+        }
+        blackPopulation.add(black);
+        whitePopulation.add(white);
+    }
+
+    private void age() {
         // Age and die
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
@@ -86,26 +142,53 @@ public class DaisyWorld {
                 }
             }
         }
+    }
+
+    public void tick() {
+        // Absorb luminosity
+        absorb();
+        // Diffuse
+        Util.diffuse(grid, Params.DIFFUSION_RATIO);
+        // Age and check die
+        age();
         // Regenerate
         Util.regenerate(grid);
-
+        // Record global temperature and black and white population
+        recordGlobalTemp();
+        recordPopulation();
     }
 
-    public void run() {
-        seedDaisies(grid, startBlack, startWhite);
-        for (int t = 0; t < Params.TICKS; t++) {
-            tick();
-        }
-    }
-    public static void main(String[] args) {
-        DaisyWorld earth = new DaisyWorld();
-        earth.run();
-        Patch[][] grid = earth.grid;
+    public void printGrid() {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                System.out.print(grid[i][j].getDaisy());
+                Patch patch = grid[i][j];
+                Daisy daisy = patch.getDaisy();
+                if (daisy != null) {
+                    if (daisy.getType() == Daisy.daisyType.BLACK) {
+                        System.out.print("\u25CF ");
+                    } else {
+                        System.out.print("\u25CB ");
+                    }
+                    System.out.printf("%6.2f |", patch.getTemperature());
+                } else {
+                    System.out.print("\u25A1        |");
+                }
             }
             System.out.println();
         }
+    }
+
+    public static void main(String[] args) {
+        DaisyWorld earth = new DaisyWorld(0.2, 0.2,
+                0.25, 0.75, 0.4, 0.8);
+        earth.printGrid();
+        for (int t = 0; t < 200; t++) {
+            earth.tick();
+            System.out.println();
+            earth.printGrid();
+        }
+        System.out.println(earth.getGlobalTempRecord());
+        System.out.println(earth.getBlackPopulation());
+        System.out.println(earth.getWhitePopulation());
     }
 }

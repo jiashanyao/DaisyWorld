@@ -6,7 +6,7 @@ public class Params {
 
     public static double ALBEDO_OF_WHITE = 0.75;
     public static double ALBEDO_OF_BLACk = 0.25;
-    public static double ALBEDO_Of_SURFACE = 0.4;
+    public static double ALBEDO_Of_SURFACE = 1;
 
     // the max age of daisies
     public static int MAX_AGE = 25;

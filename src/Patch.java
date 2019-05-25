@@ -15,14 +15,14 @@ public class Patch {
     }
 
     //calculate the temperature of this patch
-    public void calTemp(double solarLuminosity) {
+    public void calTemp(double solarLuminosity, double albedoOfSurface) {
         // the absorbed luminosity by this patch
         double absorbedLuminosity = 0;
         double localHeating = 0;
         // if there is no daisy on this patch, the absorbed luminosity
         // is calculated by (1 - albedo of surface) * solar luminosity
         if (daisy == null) {
-            absorbedLuminosity = (1 - Params.ALBEDO_Of_SURFACE) * solarLuminosity;
+            absorbedLuminosity = (1 - albedoOfSurface) * solarLuminosity;
         }
         // else the absorbed luminosity is calculated by
         // (1 - albedo of daisy on this patch) * solar luminosity
