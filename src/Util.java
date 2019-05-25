@@ -98,7 +98,7 @@ public class Util {
         if (coordinate < 0) {
             return Params.EDGE - 1;
         } else if (coordinate >= Params.EDGE) {
-            return  0;
+            return 0;
         } else {
             return coordinate;
         }
@@ -106,41 +106,8 @@ public class Util {
 
     private static void addIfNoDaisy(LinkedList<int[]> neighbors, int x, int y, Patch[][] grid) {
         if (grid[x][y].getDaisy() == null) {
-            neighbors.add(new int[] {x, y});
+            neighbors.add(new int[]{x, y});
         }
     }
 
-    public static void main(String[] args) {
-        Patch [][] grid = new Patch[Params.EDGE][Params.EDGE];
-        for (int i = 0; i < Params.EDGE; i++) {
-            for (int j = 0; j < Params.EDGE; j++) {
-                grid[i][j] = new Patch();
-                grid[i][j].setTemperature(25);
-            }
-        }
-        grid[4][4].setDaisy(new Daisy(Daisy.daisyType.WHITE, 0, 0));
-        grid[4][5].setDaisy(new Daisy(Daisy.daisyType.WHITE, 0, 0));
-        grid[4][6].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
-        grid[5][4].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
-        grid[5][6].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
-        grid[6][4].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
-        grid[6][5].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
-        grid[6][6].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
-
-        for (int k = 0; k < 1; k++) {
-            regenerate(grid);
-            for (int i = 0; i < Params.EDGE; i++) {
-                for (int j = 0; j < Params.EDGE; j++) {
-                    Daisy daisy = grid[i][j].getDaisy();
-                    if (daisy != null) {
-                        System.out.print(grid[i][j].getDaisy().getType() + " ");
-                    } else {
-                        System.out.print("null  ");
-                    }
-                }
-                System.out.println();
-            }
-            System.out.println();
-        }
-    }
 }
