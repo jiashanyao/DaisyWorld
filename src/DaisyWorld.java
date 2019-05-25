@@ -23,11 +23,11 @@ public class DaisyWorld {
 
     private ArrayList<Integer> whitePopulation;
 
-    private Patch [][] grid;
+    private Patch[][] grid;
 
     // initialize the daisy world
     public DaisyWorld(double startBlack, double startWhite, double albedoOfBlack,
-               double albedoOfWhite, double albedoOfSurface, double solarLuminosity) {
+                      double albedoOfWhite, double albedoOfSurface, double solarLuminosity) {
         this.startBlack = startBlack;
         this.startWhite = startWhite;
         this.albedoOfBlack = albedoOfBlack;
@@ -79,7 +79,7 @@ public class DaisyWorld {
         randomlySeed(grid, remainingSpace, numOfWhite, Daisy.daisyType.WHITE, albedoOfWhite);
     }
 
-    private void randomlySeed(Patch[][] grid, LinkedList<int[]> remainingSpace,  int numberOfDaisies, Daisy.daisyType type, double albedo) {
+    private void randomlySeed(Patch[][] grid, LinkedList<int[]> remainingSpace, int numberOfDaisies, Daisy.daisyType type, double albedo) {
         Random random = new Random();
         while (numberOfDaisies > 0) {
             int maxRandom = remainingSpace.size();
@@ -117,9 +117,9 @@ public class DaisyWorld {
                 Daisy daisy = grid[i][j].getDaisy();
                 if (daisy != null) {
                     if (daisy.getType() == Daisy.daisyType.BLACK) {
-                        black ++;
+                        black++;
                     } else {
-                        white ++;
+                        white++;
                     }
                 }
             }
@@ -179,10 +179,12 @@ public class DaisyWorld {
     }
 
     public static void main(String[] args) {
-        DaisyWorld earth = new DaisyWorld(0.2, 0.2,
-                0.25, 0.5, 0.4, 0.8);
+        DaisyWorld earth = new DaisyWorld(
+                Params.START_BLACK, Params.START_WHITE,
+                Params.ALBEDO_OF_BLACk, Params.ALBEDO_OF_WHITE,
+                Params.ALBEDO_Of_SURFACE, Params.SOLAR_LUMINOSITY);
         earth.printGrid();
-        for (int t = 0; t < 200; t++) {
+        for (int t = 0; t < Params.TICKS; t++) {
             earth.tick();
             System.out.println();
 //            earth.printGrid();
