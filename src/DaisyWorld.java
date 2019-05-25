@@ -180,9 +180,9 @@ public class DaisyWorld {
 
     public static void main(String[] args) {
         DaisyWorld earth = new DaisyWorld(0.2, 0.2,
-                0.25, 0.75, 0.4, 0.8);
+                0.25, 0.5, 0.4, 0.8);
         earth.printGrid();
-        for (int t = 0; t < 2; t++) {
+        for (int t = 0; t < 200; t++) {
             earth.tick();
             System.out.println();
             earth.printGrid();

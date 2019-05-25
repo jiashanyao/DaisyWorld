@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -42,27 +43,29 @@ public class Util {
     }
 
     public static void regenerate(Patch[][] grid) {
-        // Records if a patch sprouts a daisy in the grid
-        Daisy[][] sproutGrid = new Daisy[Params.EDGE][Params.EDGE];
-        Random random = new Random();
-        // Calculates which patch will sprout a daisy
-        // For patches that are not located on edges
+        // Records sprout candidates of an open patch (a list consisting black and/or white daisies)
+        ArrayList<Daisy>[][] sproutGrid = new ArrayList[Params.EDGE][Params.EDGE];
+        // Checks each patch for its regeneration
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
                 sprout(grid, sproutGrid, i, j);
             }
         }
-        // Applies the sprouted daisies to the original grid
+        // Applies the sprouted daisies to the original grid.
+        // Randomly chose a baby daisy if there are more than one candidate.
+        Random random = new Random();
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
                 if (grid[i][j].getDaisy() == null && sproutGrid[i][j] != null) {
-                    grid[i][j].setDaisy(sproutGrid[i][j]);
+                    // Randomly chooses a baby candidate
+                    Daisy babyDaisy = sproutGrid[i][j].get(random.nextInt(sproutGrid[i][j].size()));
+                    grid[i][j].setDaisy(babyDaisy);
                 }
             }
         }
     }
 
-    private static void sprout(Patch[][] grid, Daisy[][] sproutGrid, int i, int j) {
+    private static void sprout(Patch[][] grid, ArrayList<Daisy>[][] sproutGrid, int i, int j) {
         double temperature = grid[i][j].getTemperature();
         double seedThreshold = (0.1457 * temperature) - (0.0032 * (temperature * temperature)) - 0.6443;
         Random random = new Random();
@@ -80,9 +83,14 @@ public class Util {
             addIfNoDaisy(neighbors, wrap(i), wrap(j - 1), grid);
             if (neighbors.size() > 0) {
                 int[] sproutCoor = neighbors.get(random.nextInt(neighbors.size()));
+                if (sproutGrid[sproutCoor[0]][sproutCoor[1]] == null) {
+                    sproutGrid[sproutCoor[0]][sproutCoor[1]] = new ArrayList<>();
+                }
                 int age = random.nextInt(Params.MAX_AGE);
-                // Inherits from parent's type, albedo. Age is randomized.
-                sproutGrid[sproutCoor[0]][sproutCoor[1]] = new Daisy(parent.getType(), parent.getAlbedo(), age);
+                // Baby daisy inherits from parent's type, albedo. Age is randomized.
+                Daisy babyDaisy = new Daisy(parent.getType(), parent.getAlbedo(), age);
+                // Adds the baby to a list of baby candidates for that patch.
+                sproutGrid[sproutCoor[0]][sproutCoor[1]].add(babyDaisy);
             }
         }
     }
@@ -108,11 +116,19 @@ public class Util {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
                 grid[i][j] = new Patch();
-                grid[i][j].setTemperature(7);
+                grid[i][j].setTemperature(25);
             }
         }
-        grid[0][0].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
-        for (int k = 0; k < 5; k++) {
+        grid[4][4].setDaisy(new Daisy(Daisy.daisyType.WHITE, 0, 0));
+        grid[4][5].setDaisy(new Daisy(Daisy.daisyType.WHITE, 0, 0));
+        grid[4][6].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
+        grid[5][4].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
+        grid[5][6].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
+        grid[6][4].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
+        grid[6][5].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
+        grid[6][6].setDaisy(new Daisy(Daisy.daisyType.BLACK, 0, 0));
+
+        for (int k = 0; k < 1; k++) {
             regenerate(grid);
             for (int i = 0; i < Params.EDGE; i++) {
                 for (int j = 0; j < Params.EDGE; j++) {
