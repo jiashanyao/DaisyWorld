@@ -1,3 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Random;
@@ -189,8 +193,30 @@ public class DaisyWorld {
 //            System.out.println();
 //            earth.printGrid();
         }
-        System.out.println(earth.getGlobalTempRecord());
-        System.out.println(earth.getBlackPopulation());
-        System.out.println(earth.getWhitePopulation());
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("temp.txt"));
+            for (Double temp : earth.getGlobalTempRecord()) {
+                writer.write(temp.toString());
+                writer.newLine();
+            }
+            writer.close();
+            writer = new BufferedWriter(new FileWriter("black.txt"));
+            for (Integer black : earth.getBlackPopulation()) {
+                writer.write(black.toString());
+                writer.newLine();
+            }
+            writer.close();
+            writer = new BufferedWriter(new FileWriter("white.txt"));
+            for (Integer white : earth.getWhitePopulation()) {
+                writer.write(white.toString());
+                writer.newLine();
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Global Temperature " + earth.getGlobalTempRecord());
+        System.out.println("Black Population " + earth.getBlackPopulation());
+        System.out.println("White Population " + earth.getWhitePopulation());
     }
 }

@@ -4,9 +4,9 @@ public class Params {
     // initial percentage of white daisies
     public static double START_WHITE = 0.2;
 
-    public static double ALBEDO_OF_WHITE = 0.75;
+    public static double ALBEDO_OF_WHITE = 0.5;
     public static double ALBEDO_OF_BLACk = 0.25;
-    public static double ALBEDO_Of_SURFACE = 1;
+    public static double ALBEDO_Of_SURFACE = 0.4;
 
     // the max age of daisies
     public static int MAX_AGE = 25;
@@ -15,10 +15,10 @@ public class Params {
     public static Double SOLAR_LUMINOSITY = 0.8;
 
     // max ticks of the daisy world
-    public static int TICKS = 25;
+    public static int TICKS = 100;
 
     // edge length of daisy world
-    public static int EDGE = 30;
+    public static int EDGE = 29;
 
     // Diffusion ratio
     public static double DIFFUSION_RATIO = 0.5;
