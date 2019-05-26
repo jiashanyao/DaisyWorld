@@ -1,3 +1,4 @@
+close all;
 tempFile = fopen('temp.txt', 'r');
 temp = fscanf(tempFile, '%f');
 fclose(tempFile);

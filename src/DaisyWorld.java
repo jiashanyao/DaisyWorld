@@ -47,11 +47,12 @@ public class DaisyWorld {
         }
         // Initialize global temperature and black and white population record
         globalTempRecord = new ArrayList<>();
-        globalTempRecord.add(0.0);
         blackPopulation = new ArrayList<>();
         whitePopulation = new ArrayList<>();
         // Seed daisies
         seedDaisies(grid, this.startBlack, this.startWhite);
+        absorb();
+        recordGlobalTemp();
         recordPopulation();
     }
 
