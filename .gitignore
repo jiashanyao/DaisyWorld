@@ -3,6 +3,4 @@
 *.class
 DaisyWorld.iml
 Test.java
-temp.txt
-black.txt
-white.txt
+data.csv

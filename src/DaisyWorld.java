@@ -194,30 +194,49 @@ public class DaisyWorld {
 //            System.out.println();
 //            earth.printGrid();
         }
+        ArrayList<Double> temp = earth.getGlobalTempRecord();
+        ArrayList<Integer> black = earth.getBlackPopulation();
+        ArrayList<Integer> white = earth.getWhitePopulation();
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("temp.txt"));
-            for (Double temp : earth.getGlobalTempRecord()) {
-                writer.write(temp.toString());
-                writer.newLine();
+            BufferedWriter writer = new BufferedWriter(new FileWriter("data.csv"));
+            for (Integer i = 0; i <= Params.TICKS; i++) {
+                if (i < Params.TICKS) {
+                    writer.write(i.toString() + ',');
+                } else {
+                    writer.write(i.toString());
+                }
             }
-            writer.close();
-            writer = new BufferedWriter(new FileWriter("black.txt"));
-            for (Integer black : earth.getBlackPopulation()) {
-                writer.write(black.toString());
-                writer.newLine();
+            writer.newLine();
+            for (int i = 0; i <= Params.TICKS; i++) {
+                if (i < Params.TICKS) {
+                    writer.write(temp.get(i).toString() + ',');
+                } else {
+                    writer.write(temp.get(i).toString());
+                }
             }
-            writer.close();
-            writer = new BufferedWriter(new FileWriter("white.txt"));
-            for (Integer white : earth.getWhitePopulation()) {
-                writer.write(white.toString());
-                writer.newLine();
+            writer.newLine();
+            for (int i = 0; i <= Params.TICKS; i++) {
+                if (i < Params.TICKS) {
+                    writer.write(black.get(i).toString() + ',');
+                } else {
+                    writer.write(black.get(i).toString());
+                }
             }
+            writer.newLine();
+            for (int i = 0; i <= Params.TICKS; i++) {
+                if (i < Params.TICKS) {
+                    writer.write(white.get(i).toString() + ',');
+                } else {
+                    writer.write(white.get(i).toString());
+                }
+            }
+            writer.newLine();
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Global Temperature " + earth.getGlobalTempRecord());
-        System.out.println("Black Population " + earth.getBlackPopulation());
-        System.out.println("White Population " + earth.getWhitePopulation());
+        System.out.println("Global Temperature " + temp);
+        System.out.println("Black Population " + black);
+        System.out.println("White Population " + white);
     }
 }

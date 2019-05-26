@@ -1,16 +1,10 @@
 close all;
-tempFile = fopen('temp.txt', 'r');
-temp = fscanf(tempFile, '%f');
-fclose(tempFile);
-blackFile = fopen('black.txt', 'r');
-black = fscanf(blackFile, '%f');
-fclose(blackFile);
-whiteFile = fopen('white.txt', 'r');
-white = fscanf(whiteFile, '%f');
-fclose(whiteFile);
+data = csvread('data.csv');
+tick = data(1,:);
+temp = data(2,:);
+black = data(3,:);
+white = data(4,:);
 
-len = length (temp);
-tick = 1 : len;
 figure;
 plot(tick, temp);
 xlabel('Tick');
