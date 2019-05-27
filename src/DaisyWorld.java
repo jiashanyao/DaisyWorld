@@ -1,7 +1,6 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Random;
@@ -21,13 +20,13 @@ public class DaisyWorld {
     private double albedoOfSurface;
     private double solarLuminosity;
 
+    private Patch[][] grid;
     private ArrayList<Double> globalTempRecord;
 
     private ArrayList<Integer> blackPopulation;
 
     private ArrayList<Integer> whitePopulation;
 
-    private Patch[][] grid;
 
     // initialize the daisy world
     public DaisyWorld(double startBlack, double startWhite, double albedoOfBlack,
@@ -80,11 +79,11 @@ public class DaisyWorld {
         int numberOfSpaces = Params.EDGE * Params.EDGE;
         int numOfBlack = (int) (percentOfBlack * numberOfSpaces);
         int numOfWhite = (int) (percentOfWhite * numberOfSpaces);
-        randomlySeed(grid, remainingSpace, numOfBlack, Daisy.daisyType.BLACK, albedoOfBlack);
-        randomlySeed(grid, remainingSpace, numOfWhite, Daisy.daisyType.WHITE, albedoOfWhite);
+        randomlySeed(grid, remainingSpace, numOfBlack, Daisy.DaisyType.BLACK, albedoOfBlack);
+        randomlySeed(grid, remainingSpace, numOfWhite, Daisy.DaisyType.WHITE, albedoOfWhite);
     }
 
-    private void randomlySeed(Patch[][] grid, LinkedList<int[]> remainingSpace, int numberOfDaisies, Daisy.daisyType type, double albedo) {
+    private void randomlySeed(Patch[][] grid, LinkedList<int[]> remainingSpace, int numberOfDaisies, Daisy.DaisyType type, double albedo) {
         Random random = new Random();
         while (numberOfDaisies > 0) {
             int maxRandom = remainingSpace.size();
@@ -121,7 +120,7 @@ public class DaisyWorld {
             for (int j = 0; j < Params.EDGE; j++) {
                 Daisy daisy = grid[i][j].getDaisy();
                 if (daisy != null) {
-                    if (daisy.getType() == Daisy.daisyType.BLACK) {
+                    if (daisy.getType() == Daisy.DaisyType.BLACK) {
                         black++;
                     } else {
                         white++;
@@ -157,7 +156,7 @@ public class DaisyWorld {
         // Age and check die
         age();
         // Regenerate
-        Util.regenerate(grid);
+        Util.reproduct(grid);
         // Record global temperature and black and white population
         recordGlobalTemp();
         recordPopulation();
@@ -169,7 +168,7 @@ public class DaisyWorld {
                 Patch patch = grid[i][j];
                 Daisy daisy = patch.getDaisy();
                 if (daisy != null) {
-                    if (daisy.getType() == Daisy.daisyType.BLACK) {
+                    if (daisy.getType() == Daisy.DaisyType.BLACK) {
                         System.out.print("\u25CF ");
                     } else {
                         System.out.print("\u25CB ");

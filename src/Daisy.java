@@ -3,23 +3,23 @@
  */
 public class Daisy {
 
-    private daisyType type;
+    private DaisyType type;
     //the albedo of daisy
     private double albedo;
     //the age of daisy
     private int age;
 
-    public Daisy( daisyType type, double albedo, int age){
+    public Daisy(DaisyType type, double albedo, int age){
         this.type = type;
         this.albedo = albedo;
         this.age = age;
     }
 
-    public daisyType getType() {
+    public DaisyType getType() {
         return type;
     }
 
-    public void setType(daisyType type) {
+    public void setType(DaisyType type) {
         this.type = type;
     }
 
@@ -42,5 +42,5 @@ public class Daisy {
         this.albedo = albedo;
     }
 
-    public enum daisyType {BLACK, WHITE}
+    public enum DaisyType {BLACK, WHITE}
 }

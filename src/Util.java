@@ -42,7 +42,7 @@ public class Util {
         }
     }
 
-    public static void regenerate(Patch[][] grid) {
+    public static void reproduct(Patch[][] grid) {
         // Records sprout candidates of an open patch (a list consisting black and/or white daisies)
         ArrayList<Daisy>[][] sproutGrid = new ArrayList[Params.EDGE][Params.EDGE];
         // Checks each patch for its regeneration
