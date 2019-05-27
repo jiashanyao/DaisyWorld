@@ -251,13 +251,13 @@ public class DaisyWorld {
                 Daisy daisy = patch.getDaisy();
                 if (daisy != null) {
                     if (daisy.getType() == Daisy.DaisyType.BLACK) {
-                        System.out.print("\u25CF ");
+                        System.out.print("\u25CF");
                     } else {
-                        System.out.print("\u25CB ");
+                        System.out.print("\u25CB");
                     }
-                    System.out.printf("%6.2f |", patch.getTemperature());
+                    System.out.printf("%3.0f|", patch.getTemperature());
                 } else {
-                    System.out.printf("  %6.2f |", patch.getTemperature());
+                    System.out.printf(" %3.0f|", patch.getTemperature());
                 }
             }
             System.out.println();

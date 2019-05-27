@@ -32,7 +32,7 @@ public class Params {
     /* Extension switch and parameters */
 
     //Main switch of extension, off = 0; on = 1.
-    public static int QUALITY_SWITCH = 0;
+    public static int QUALITY_SWITCH = 1;
 
     //Change base, the change will dependent on product of base and current non-perfect degree.
     public static double CHANGE_BASE = .1;
