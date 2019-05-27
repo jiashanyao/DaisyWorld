@@ -238,6 +238,7 @@ public class DaisyWorld {
         ArrayList<Double> temp = earth.getGlobalTempRecord();
         ArrayList<Integer> black = earth.getBlackPopulation();
         ArrayList<Integer> white = earth.getWhitePopulation();
+        ArrayList<Double> quality = earth.getGlobalQualityRecord();
         //Please also output quality here
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("data.csv"));
@@ -273,6 +274,14 @@ public class DaisyWorld {
                 }
             }
             writer.newLine();
+            for (int i = 0; i <= Params.TICKS; i++) {
+                if (i < Params.TICKS) {
+                    writer.write(quality.get(i).toString() + ',');
+                } else {
+                    writer.write(quality.get(i).toString());
+                }
+            }
+            writer.newLine();
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -280,5 +289,6 @@ public class DaisyWorld {
         System.out.println("Global Temperature " + temp);
         System.out.println("Black Population " + black);
         System.out.println("White Population " + white);
+        System.out.println("Global Soil Quality " + quality);
     }
 }
