@@ -169,7 +169,7 @@ public class Util {
         double survivability = random.nextDouble();
         double soilAvailability = random.nextDouble();
         Daisy parent = grid[i][j].getDaisy();
-        if (parent != null && survivability < seedThreshold && soilAvailability < quality) {
+        if (parent != null && survivability < seedThreshold && soilAvailability < quality && quality > 0) {
             LinkedList<int[]> neighbors = new LinkedList<>();
             addIfNoDaisy(neighbors, wrap(i - 1), wrap(j - 1), grid);
             addIfNoDaisy(neighbors, wrap(i - 1), wrap(j), grid);
