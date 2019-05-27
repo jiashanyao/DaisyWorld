@@ -152,11 +152,11 @@ public class DaisyWorld {
         // Absorb luminosity
         absorb();
         // Diffuse
-        Util.diffuse(grid, Params.DIFFUSION_RATIO);
+        Util.diffuseTemperature(grid, Params.DIFFUSION_RATIO);
         // Age and check die
         age();
         // Regenerate
-        Util.reproduct(grid);
+        Util.reProduct(grid);
         // Record global temperature and black and white population
         recordGlobalTemp();
         recordPopulation();

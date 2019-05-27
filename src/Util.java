@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Util {
 
-    public static void diffuse(Patch[][] grid, double diffusionRatio) {
+    public static void diffuseTemperature(Patch[][] grid, double diffusionRatio) {
         double[][] gridDelta = new double[Params.EDGE][Params.EDGE];
 
         //In default the temp will not change, so the change condition will be 0.
@@ -18,6 +18,22 @@ public class Util {
                 calculateShares(grid[i][j].getTemperature(), gridDelta, i, j, diffusionRatio);
         }
         applyShares(gridDelta, grid, diffusionRatio);
+    }
+
+    public static void diffuseQuality(Patch[][] grid, double diffusionRatio) {
+        double[][] gridDelta = new double[Params.EDGE][Params.EDGE];
+
+        //In default the temp will not change, so the change condition will be 0.
+        for (int i = 0; i < Params.EDGE; i++) {
+            for (int j = 0; j < Params.EDGE; j++) gridDelta[i][j] = 0;
+        }
+
+        //For each patch would be changed, implement its modification
+        for (int i = 0; i < Params.EDGE; i++) {
+            for (int j = 0; j < Params.EDGE; j++)
+                calculateShares(grid[i][j].getQuality(), gridDelta, i, j, diffusionRatio);
+        }
+        applyQualityShares(gridDelta, grid, diffusionRatio);
     }
 
     private static void calculateShares(double patchValue, double[][] gridDelta, int x, int y, double diffusionRatio) {
@@ -42,7 +58,16 @@ public class Util {
         }
     }
 
-    public static void reproduct(Patch[][] grid) {
+    private static void applyQualityShares(double[][] gridDelta, Patch[][] grid, double diffusionRatio) {
+        for (int i = 0; i < Params.EDGE; i++) {
+            for (int j = 0; j < Params.EDGE; j++) {
+                double newTemperature = grid[i][j].getQuality() * (1 - diffusionRatio) + gridDelta[i][j];
+                grid[i][j].setTemperature(newTemperature);
+            }
+        }
+    }
+
+    public static void reProduct(Patch[][] grid) {
         // Records sprout candidates of an open patch (a list consisting black and/or white daisies)
         ArrayList<Daisy>[][] sproutGrid = new ArrayList[Params.EDGE][Params.EDGE];
         // Checks each patch for its regeneration

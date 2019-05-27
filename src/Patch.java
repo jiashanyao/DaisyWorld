@@ -6,12 +6,15 @@
 public class Patch {
     //the temperature of this patch
     private double temperature;
+    //the quality of this patch
+    private double quality;
     //the daisy on this patch
     private Daisy daisy;
 
     public Patch(){
         temperature = 0;
         daisy = null;
+        quality = 1;
     }
 
     //calculate the temperature of this patch
@@ -51,6 +54,10 @@ public class Patch {
 
     public double getTemperature() {
         return temperature;
+    }
+
+    public double getQuality() {
+        return quality;
     }
 
     public void setTemperature(double temperature) {
