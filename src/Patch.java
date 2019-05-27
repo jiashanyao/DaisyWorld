@@ -18,8 +18,8 @@ public class Patch {
 
     /**
      * Calculate the temperature of this patch after absorbing sun light.
-     * @param solarLuminosity
-     * @param albedoOfSurface
+     * @param solarLuminosity Solar luminosity
+     * @param albedoOfSurface Albedo of surface
      */
     public void calTemp(double solarLuminosity, double albedoOfSurface) {
         // the absorbed luminosity by this patch

@@ -90,9 +90,9 @@ public class DaisyWorld {
     /**
      * Randomly initialize daisies in the grid of patches with the given black and white
      * percentages.
-     * @param grid
-     * @param percentOfBlack
-     * @param percentOfWhite
+     * @param grid A grid of patches represented by a 2-dimension array
+     * @param percentOfBlack Percentage of start black daisies
+     * @param percentOfWhite Percentage of start white daisies
      */
     private void seedDaisies(Patch[][] grid, double percentOfBlack, double percentOfWhite) {
         LinkedList<int[]> remainingSpace = new LinkedList<>();
@@ -115,11 +115,11 @@ public class DaisyWorld {
 
     /**
      * Randomly seed one type of daisies with the remainingSpace and numberOfDaisies of that type
-     * @param grid
-     * @param remainingSpace
-     * @param numberOfDaisies
-     * @param type
-     * @param albedo
+     * @param grid A grid of patches represented by a 2-dimension array
+     * @param remainingSpace List of patches that are not occupied yet
+     * @param numberOfDaisies Number of daisies to be planted
+     * @param type Type of daisies to be planted
+     * @param albedo Albedo of daisies to be planted
      */
     private void randomlySeed(Patch[][] grid, LinkedList<int[]> remainingSpace,
                               int numberOfDaisies, Daisy.DaisyType type, double albedo) {
@@ -216,8 +216,8 @@ public class DaisyWorld {
     /**
      * At each tick, all patches absorb energy from the sun, diffuse temperature synchronously;
      * all daisies age and die if necessary, and reproduce synchronously. mode is used to check
-     * if the option of soil quality is on.
-     * @param mode
+     * if the option of soil quality extension is on.
+     * @param mode whether the option of soil quality extension is on
      */
     public void tick(int mode) {
         // Absorb luminosity
@@ -267,7 +267,7 @@ public class DaisyWorld {
 
     /**
      * Main method, entry point of the program.
-     * @param args
+     * @param args Command-line input, not needed in this program.
      */
     public static void main(String[] args) {
         DaisyWorld earth = new DaisyWorld();

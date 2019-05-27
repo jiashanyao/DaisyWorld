@@ -12,8 +12,8 @@ public class Util {
      * Diffuses a ratio of the temperature of a patch to all 8 neighbours equally.
      * The patch keeps what is left. Diffusion is synchronous for all patches in a grid.
      *
-     * @param grid
-     * @param diffusionRatio
+     * @param grid A grid of patches represented by a 2-dimension array
+     * @param diffusionRatio Diffusion ratio
      */
     public static void diffuseTemperature(Patch[][] grid, double diffusionRatio) {
         // Initialize a grid recording the temperature change for each patch after diffusion
@@ -35,8 +35,8 @@ public class Util {
      * The patch keeps what is left. This is synchronous for all patches in a grid.
      * Sand patch will no longer receive soil quality from its neighbours.
      *
-     * @param grid
-     * @param diffusionRatio
+     * @param grid A grid of patches represented by a 2-dimension array
+     * @param diffusionRatio Diffusion ratio
      */
     public static void diffuseSoilQuality(Patch[][] grid, double diffusionRatio) {
         // Initialize a grid recording the temperature change for each patch after diffusion
@@ -57,11 +57,11 @@ public class Util {
      * Calculate shares of a diffused value of a patch (x, y) for the patch's neighbours,
      * and accumulate the shares to the delta grid.
      *
-     * @param patchValue
-     * @param gridDelta
-     * @param x
-     * @param y
-     * @param diffusionRatio
+     * @param patchValue The patch value to be diffused
+     * @param gridDelta A 2-d array recording the value change for each patch after diffusion
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param diffusionRatio Diffusion ratio
      */
     private static void calculateShares(double patchValue, double[][] gridDelta,
                                         int x, int y, double diffusionRatio) {
@@ -79,9 +79,9 @@ public class Util {
     /**
      * Add the temperature change from delta grid to the remaining temperature in grid.
      *
-     * @param gridDelta
-     * @param grid
-     * @param diffusionRatio
+     * @param gridDelta A 2-d array recording the temperature change for each patch after diffusion
+     * @param grid A grid of patches represented by a 2-dimension array
+     * @param diffusionRatio Diffusion ratio
      */
     private static void applyTemperatureShares(
             double[][] gridDelta, Patch[][] grid, double diffusionRatio) {
@@ -99,9 +99,9 @@ public class Util {
      * Add the soil quality change from delta grid to the remaining soil quality in grid.
      * Sand patch will no longer receive soil quality delta from its neighbours.
      *
-     * @param gridDelta
-     * @param grid
-     * @param diffusionRatio
+     * @param gridDelta A 2-d array recording the soil quality change for each patch after diffusion
+     * @param grid A grid of patches represented by a 2-dimension array
+     * @param diffusionRatio Diffusion ratio
      */
     private static void applyQualityShares(double[][] gridDelta, Patch[][] grid,
                                            double diffusionRatio) {
@@ -121,10 +121,11 @@ public class Util {
      * Each daisy in the grid reproduces its next generation.
      * Reproduction happens synchronously for each daisy.
      *
-     * @param grid
+     * @param grid A grid of patches represented by a 2-dimension array
      */
     public static void reproduce(Patch[][] grid) {
-        // Record sprout candidates of an open patch (a list consisting black and/or white daisies)
+        // A grid that records sprout candidates of each open patch (a list consisting black
+        // and/or white daisies)
         ArrayList<Daisy>[][] sproutGrid = new ArrayList[Params.EDGE][Params.EDGE];
         // Check each patch for its regeneration
         for (int i = 0; i < Params.EDGE; i++) {
@@ -154,11 +155,11 @@ public class Util {
      * surrounded by 7 black daisies and 1 white daisies, it has a probability of 7/8
      * to sprout a black daisy and a probability of 1/8 to sprout a white daisy.
      *
-     * @param grid
-     * @param sproutGrid
-     * @param i
-     * @param j
-     * @param quality
+     * @param grid A grid of patches represented by a 2-dimension array
+     * @param sproutGrid A grid of sprout candidates for each patch, an 2-d array of lists
+     * @param i i coordinate
+     * @param j j coordinate
+     * @param quality Soil quality of the patch
      */
     private static void sprout(Patch[][] grid, ArrayList<Daisy>[][] sproutGrid, int i, int j,
                                double quality) {
@@ -220,8 +221,8 @@ public class Util {
     /**
      * Wrap a coordinate to make the world a torus.
      *
-     * @param coordinate
-     * @return
+     * @param coordinate Coordinate to be wrapped
+     * @return Wrapped coordinate
      */
     private static int wrap(int coordinate) {
         if (coordinate < 0) {
@@ -236,10 +237,10 @@ public class Util {
     /**
      * Add {x, y} to neighbors list if patch at grid(x,y) has no daisy.
      *
-     * @param neighbors
-     * @param x
-     * @param y
-     * @param grid
+     * @param neighbors List of neighbors that has no daisy
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param grid A grid of patches represented by a 2-dimension array
      */
     private static void addIfNoDaisy(LinkedList<int[]> neighbors, int x, int y, Patch[][] grid) {
         if (grid[x][y].getDaisy() == null) {
