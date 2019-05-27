@@ -11,6 +11,7 @@ public class Util {
     /**
      * Diffuses a ratio of the temperature of a patch to all 8 neighbours equally.
      * The patch keeps what is left. Diffusion is synchronous for all patches in a grid.
+     *
      * @param grid
      * @param diffusionRatio
      */
@@ -33,6 +34,7 @@ public class Util {
      * Diffuse a ratio of the soil quality of a patch to all 8 neighbours equally.
      * The patch keeps what is left. This is synchronous for all patches in a grid.
      * Sand patch will no longer receive soil quality from its neighbours.
+     *
      * @param grid
      * @param diffusionRatio
      */
@@ -54,13 +56,15 @@ public class Util {
     /**
      * Calculate shares of a diffused value of a patch (x, y) for the patch's neighbours,
      * and accumulate the shares to the delta grid.
+     *
      * @param patchValue
      * @param gridDelta
      * @param x
      * @param y
      * @param diffusionRatio
      */
-    private static void calculateShares(double patchValue, double[][] gridDelta, int x, int y, double diffusionRatio) {
+    private static void calculateShares(double patchValue, double[][] gridDelta,
+                                        int x, int y, double diffusionRatio) {
         double deltaTemp = diffusionRatio / 8 * patchValue;
         gridDelta[wrap(x - 1)][wrap(y - 1)] += deltaTemp;
         gridDelta[wrap(x - 1)][wrap(y)] += deltaTemp;
@@ -74,15 +78,18 @@ public class Util {
 
     /**
      * Add the temperature change from delta grid to the remaining temperature in grid.
+     *
      * @param gridDelta
      * @param grid
      * @param diffusionRatio
      */
-    private static void applyTemperatureShares(double[][] gridDelta, Patch[][] grid, double diffusionRatio) {
+    private static void applyTemperatureShares(
+            double[][] gridDelta, Patch[][] grid, double diffusionRatio) {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                // New temperature is the left temperature after losing plus the temperature gained.
-                double newTemperature = grid[i][j].getTemperature() * (1 - diffusionRatio) + gridDelta[i][j];
+                // New temperature is the left temperature after losing plus the temperature gained
+                double newTemperature = grid[i][j].getTemperature() * (1 - diffusionRatio)
+                        + gridDelta[i][j];
                 grid[i][j].setTemperature(newTemperature);
             }
         }
@@ -91,11 +98,13 @@ public class Util {
     /**
      * Add the soil quality change from delta grid to the remaining soil quality in grid.
      * Sand patch will no longer receive soil quality delta from its neighbours.
+     *
      * @param gridDelta
      * @param grid
      * @param diffusionRatio
      */
-    private static void applyQualityShares(double[][] gridDelta, Patch[][] grid, double diffusionRatio) {
+    private static void applyQualityShares(double[][] gridDelta, Patch[][] grid,
+                                           double diffusionRatio) {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
                 double currentQuality = grid[i][j].getQuality();
@@ -111,19 +120,20 @@ public class Util {
     /**
      * Each daisy in the grid reproduces its next generation.
      * Reproduction happens synchronously for each daisy.
+     *
      * @param grid
      */
     public static void reproduce(Patch[][] grid) {
-        // Records sprout candidates of an open patch (a list consisting black and/or white daisies)
+        // Record sprout candidates of an open patch (a list consisting black and/or white daisies)
         ArrayList<Daisy>[][] sproutGrid = new ArrayList[Params.EDGE][Params.EDGE];
-        // Checks each patch for its regeneration
+        // Check each patch for its regeneration
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
                 sprout(grid, sproutGrid, i, j, grid[i][j].getQuality());
             }
         }
-        // Applies the sprouted daisies to the original grid.
-        // Randomly chose a baby daisy if there are more than one candidate.
+        // Apply the sprouted daisies to the original grid.
+        // Randomly choose a baby daisy if there are more than one candidate.
         Random random = new Random();
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
@@ -143,15 +153,18 @@ public class Util {
      * a random candidate will be chosen to sprout here. For example, if an open patch is
      * surrounded by 7 black daisies and 1 white daisies, it has a probability of 7/8
      * to sprout a black daisy and a probability of 1/8 to sprout a white daisy.
+     *
      * @param grid
      * @param sproutGrid
      * @param i
      * @param j
      * @param quality
      */
-    private static void sprout(Patch[][] grid, ArrayList<Daisy>[][] sproutGrid, int i, int j, double quality) {
+    private static void sprout(Patch[][] grid, ArrayList<Daisy>[][] sproutGrid, int i, int j,
+                               double quality) {
         double temperature = grid[i][j].getTemperature();
-        double seedThreshold = (0.1457 * temperature) - (0.0032 * (temperature * temperature)) - 0.6443;
+        double seedThreshold = (0.1457 * temperature)
+                - (0.0032 * (temperature * temperature)) - 0.6443;
         Random random = new Random();
         double survivability = random.nextDouble();
         double soilAvailability = random.nextDouble();
@@ -180,20 +193,21 @@ public class Util {
     }
 
     /**
-     *
      * @param grid
      * @param base
      */
     public static void changeQuality(Patch[][] grid, double base) {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                //Linear model, if the quality is good, it changed very slowly, if it is bad, it changed very fast.
+                //Linear model, if the quality is good, it changed very slowly,
+                // if it is bad, it changed very fast.
                 double currentQuality = grid[i][j].getQuality();
                 double nonPrefectRate = 1 - currentQuality;
                 double decreasePossible = base * nonPrefectRate;
                 double increasePossible = base * currentQuality;
                 double newQuality;
-                if (grid[i][j].getDaisy() == null) newQuality = Math.max(0, currentQuality - decreasePossible);
+                if (grid[i][j].getDaisy() == null)
+                    newQuality = Math.max(0, currentQuality - decreasePossible);
                 else newQuality = Math.min(1, currentQuality + increasePossible);
                 grid[i][j].setQuality(newQuality);
             }
@@ -202,6 +216,7 @@ public class Util {
 
     /**
      * Wrap a coordinate to make the world a torus.
+     *
      * @param coordinate
      * @return
      */
@@ -217,6 +232,7 @@ public class Util {
 
     /**
      * Add {x, y} to neighbors list if patch at grid(x,y) has no daisy.
+     *
      * @param neighbors
      * @param x
      * @param y

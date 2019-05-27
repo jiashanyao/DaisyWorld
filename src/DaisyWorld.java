@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * This is the main class. Run the main method of this class to run the model and get results generated.
+ * This is the main class. Run the main method of this class to run the model and get results
+ * generated.
  *
- * DaisyWorld is a world filled with two different types of daisies: black daisies and white daisies.
- * The basis of the world is a grid of patches. Each of the patches may or may not have a daisy grown.
- * The world runs as a discrete fashion tick by tick. At each tick, daisies absorb light and heat,
- * patches diffuse temperature, daisies die and reproduce, metrics are recorded.
+ * DaisyWorld is a world filled with two different types of daisies: black and white.
+ * The basis of the world is a grid of patches. Each of the patches may or may not have a daisy
+ * grown. The world runs as a discrete fashion tick by tick. At each tick, daisies absorb light
+ * and heat, patches diffuse temperature, daisies die and reproduce, metrics are recorded.
  *
  * Results are printed and written to a csv file after the model run finishes.
  */
@@ -51,7 +52,8 @@ public class DaisyWorld {
                     grid[i][j].setQuality(rand.nextDouble() * Params.INITIAL_MAX_QUALITY);
                 }
             }
-            // Diffuse for 20 rounds after randomly initializing soil quality to maintain the gradual change in soil quality
+            // Diffuse for 20 rounds after randomly initializing soil quality to maintain
+            // the gradual change in soil quality
             for (int i = 0; i < 20; i++) Util.diffuseSoilQuality(grid, Params.DIFFUSION_RATIO);
         }
 
@@ -86,14 +88,16 @@ public class DaisyWorld {
     }
 
     /**
-     * Randomly initialize daisies in the grid of patches with the given black and white percentages.
+     * Randomly initialize daisies in the grid of patches with the given black and white
+     * percentages.
      * @param grid
      * @param percentOfBlack
      * @param percentOfWhite
      */
     private void seedDaisies(Patch[][] grid, double percentOfBlack, double percentOfWhite) {
         LinkedList<int[]> remainingSpace = new LinkedList<>();
-        // Initialize the remainingSpace as a list of 2-int-arrays, each of which represents a patch coordinate in the grid
+        // Initialize the remainingSpace as a list of 2-int-arrays,
+        // each of which represents a patch coordinate in the grid
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
                 remainingSpace.add(new int[]{i, j});
@@ -103,8 +107,10 @@ public class DaisyWorld {
         int numberOfSpaces = Params.EDGE * Params.EDGE;
         int numOfBlack = (int) (percentOfBlack * numberOfSpaces);
         int numOfWhite = (int) (percentOfWhite * numberOfSpaces);
-        randomlySeed(grid, remainingSpace, numOfBlack, Daisy.DaisyType.BLACK, Params.ALBEDO_OF_BLACk);
-        randomlySeed(grid, remainingSpace, numOfWhite, Daisy.DaisyType.WHITE, Params.ALBEDO_OF_WHITE);
+        randomlySeed(grid, remainingSpace, numOfBlack,
+                Daisy.DaisyType.BLACK, Params.ALBEDO_OF_BLACk);
+        randomlySeed(grid, remainingSpace, numOfWhite,
+                Daisy.DaisyType.WHITE, Params.ALBEDO_OF_WHITE);
     }
 
     /**
@@ -115,7 +121,8 @@ public class DaisyWorld {
      * @param type
      * @param albedo
      */
-    private void randomlySeed(Patch[][] grid, LinkedList<int[]> remainingSpace, int numberOfDaisies, Daisy.DaisyType type, double albedo) {
+    private void randomlySeed(Patch[][] grid, LinkedList<int[]> remainingSpace,
+                              int numberOfDaisies, Daisy.DaisyType type, double albedo) {
         Random random = new Random();
         while (numberOfDaisies > 0) {
             int maxRandom = remainingSpace.size();

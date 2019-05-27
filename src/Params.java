@@ -37,10 +37,11 @@ public class Params {
     //Change base, the change will dependent on product of base and current non-perfect degree.
     public static double CHANGE_BASE = .1;
 
-    // At the beginning the best quality of soil among patches. For a common environment should be ~ 1 and
-    // the mathematical expect would be .5.
+    // At the beginning the best quality of soil among patches. For a common environment should be
+    // ~ 1 and the mathematical expect would be .5.
     public static double INITIAL_MAX_QUALITY = 1;
 
-    //If the quality is below Death line it will become sand and never go back. This should be very small.
+    // If the quality is below Death line it will become sand and never go back.
+    // This should be very small.
     public static double DEATH_LINE = .02;
 }
