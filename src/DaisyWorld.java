@@ -227,7 +227,7 @@ public class DaisyWorld {
         //If extension is enable also change the quality of patch (Mutual affect)
         if (mode > 0) {
             Util.diffuseSoilQuality(grid, Params.DIFFUSION_RATIO);
-            Util.changeQuality(grid, Params.CHANGE_BASE);
+            Util.changeQuality(grid);
         }
         // Age and check die
         age();

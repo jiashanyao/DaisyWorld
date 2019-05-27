@@ -193,18 +193,21 @@ public class Util {
     }
 
     /**
-     * @param grid
-     * @param base
+     * In this function the quality of soil will change according to current quality and whether
+     * it is planted. The basic law is if something is good, it is easy to become better and
+     * hard to be worse. But if something is bad, it is easy to become worse and hard to become better.
+     * (The balance of echo system)
+     * @param grid The patch World represented by 2-dimensional array.
      */
-    public static void changeQuality(Patch[][] grid, double base) {
+    public static void changeQuality(Patch[][] grid) {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
                 //Linear model, if the quality is good, it changed very slowly,
                 // if it is bad, it changed very fast.
                 double currentQuality = grid[i][j].getQuality();
                 double nonPrefectRate = 1 - currentQuality;
-                double decreasePossible = base * nonPrefectRate;
-                double increasePossible = base * currentQuality;
+                double decreasePossible = Params.CHANGE_BASE * nonPrefectRate;
+                double increasePossible = Params.CHANGE_BASE * currentQuality;
                 double newQuality;
                 if (grid[i][j].getDaisy() == null)
                     newQuality = Math.max(0, currentQuality - decreasePossible);
