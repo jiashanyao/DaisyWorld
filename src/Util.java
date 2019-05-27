@@ -61,8 +61,12 @@ public class Util {
     private static void applyQualityShares(double[][] gridDelta, Patch[][] grid, double diffusionRatio) {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                double newQuality = grid[i][j].getQuality() * (1 - diffusionRatio) + gridDelta[i][j];
-                grid[i][j].setQuality(newQuality);
+                double currentQuality = grid[i][j].getQuality();
+                //If it becomes sand, it will never go back
+                if (currentQuality > Params.DEATH_LINE) {
+                    double newQuality = currentQuality * (1 - diffusionRatio) + gridDelta[i][j];
+                    grid[i][j].setQuality(newQuality);
+                }
             }
         }
     }
@@ -94,9 +98,10 @@ public class Util {
         double temperature = grid[i][j].getTemperature();
         double seedThreshold = (0.1457 * temperature) - (0.0032 * (temperature * temperature)) - 0.6443;
         Random random = new Random();
-        double survivability = random.nextDouble() * quality;
+        double survivability = random.nextDouble();
+        double soilAvailability = random.nextDouble();
         Daisy parent = grid[i][j].getDaisy();
-        if (parent != null && survivability < seedThreshold) {
+        if (parent != null && survivability < seedThreshold && soilAvailability < quality) {
             LinkedList<int[]> neighbors = new LinkedList<>();
             addIfNoDaisy(neighbors, wrap(i - 1), wrap(j - 1), grid);
             addIfNoDaisy(neighbors, wrap(i - 1), wrap(j), grid);
@@ -125,10 +130,11 @@ public class Util {
                 //Linear model, if the quality is good, it changed very slowly, if it is bad, it changed very fast.
                 double currentQuality = grid[i][j].getQuality();
                 double nonPrefectRate = 1 - currentQuality;
-                double delta = base * nonPrefectRate;
+                double decreasePossible = base * nonPrefectRate;
+                double increasePossible = base * currentQuality;
                 double newQuality;
-                if (grid[i][j].getDaisy() == null) newQuality = currentQuality - delta;
-                else newQuality = currentQuality + delta;
+                if (grid[i][j].getDaisy() == null) newQuality = Math.max(0, currentQuality - decreasePossible);
+                else newQuality = Math.min(1, currentQuality + increasePossible);
                 grid[i][j].setQuality(newQuality);
             }
         }

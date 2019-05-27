@@ -60,10 +60,10 @@ public class DaisyWorld {
             for (int i = 0; i < Params.EDGE; i++) {
                 for (int j = 0; j < Params.EDGE; j++) {
                     grid[i][j] = new Patch();
-                    grid[i][j].setQuality(rand.nextDouble());
+                    grid[i][j].setQuality(rand.nextDouble() * Params.INITIAL_MAX_QUALITY);
                 }
             }
-            for (int i = 0; i < 5; i++) Util.diffuseQuality(grid, Params.DIFFUSION_RATIO);
+            for (int i = 0; i < 20; i++) Util.diffuseQuality(grid, Params.DIFFUSION_RATIO);
         }
 
         // Initialize global temperature and black and white population record
