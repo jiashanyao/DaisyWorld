@@ -61,8 +61,8 @@ public class Util {
     private static void applyQualityShares(double[][] gridDelta, Patch[][] grid, double diffusionRatio) {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                double newTemperature = grid[i][j].getQuality() * (1 - diffusionRatio) + gridDelta[i][j];
-                grid[i][j].setTemperature(newTemperature);
+                double newQuality = grid[i][j].getQuality() * (1 - diffusionRatio) + gridDelta[i][j];
+                grid[i][j].setQuality(newQuality);
             }
         }
     }

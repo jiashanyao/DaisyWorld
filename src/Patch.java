@@ -63,4 +63,8 @@ public class Patch {
     public void setTemperature(double temperature) {
         this.temperature = temperature;
     }
+
+    public void setQuality(double quality) {
+        this.quality = quality;
+    }
 }
