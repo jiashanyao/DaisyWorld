@@ -22,4 +22,11 @@ public class Params {
 
     // Diffusion ratio
     public static double DIFFUSION_RATIO = 0.5;
+
+    //Extension switch and parameters
+
+    //Main switch, off = 0; on = 1.
+    public static int QUALITY_SWITCH = 0;
+    //Change base, the change will dependent on product of base and current non-perfect degree.
+    public static double CHANGE_BASE = .15;
 }

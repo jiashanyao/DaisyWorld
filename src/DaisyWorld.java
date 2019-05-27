@@ -20,6 +20,9 @@ public class DaisyWorld {
     private double albedoOfSurface;
     private double solarLuminosity;
 
+    private int extensionMode;
+    private double extensionParam;
+
     private Patch[][] grid;
     private ArrayList<Double> globalTempRecord;
 
@@ -27,32 +30,53 @@ public class DaisyWorld {
 
     private ArrayList<Integer> whitePopulation;
 
+    private ArrayList<Double> globalQualityRecord;
+
 
     // initialize the daisy world
     public DaisyWorld(double startBlack, double startWhite, double albedoOfBlack,
-                      double albedoOfWhite, double albedoOfSurface, double solarLuminosity) {
+                      double albedoOfWhite, double albedoOfSurface, double solarLuminosity,
+                      int extensionMode, double extensionParam) {
         this.startBlack = startBlack;
         this.startWhite = startWhite;
         this.albedoOfBlack = albedoOfBlack;
         this.albedoOfWhite = albedoOfWhite;
         this.albedoOfSurface = albedoOfSurface;
         this.solarLuminosity = solarLuminosity;
+        this.extensionMode = extensionMode;
+        this.extensionParam = extensionParam;
         grid = new Patch[Params.EDGE][Params.EDGE];
         // Initialize grid
-        for (int i = 0; i < Params.EDGE; i++) {
-            for (int j = 0; j < Params.EDGE; j++) {
-                grid[i][j] = new Patch();
+
+        if (extensionMode == 0) {
+            for (int i = 0; i < Params.EDGE; i++) {
+                for (int j = 0; j < Params.EDGE; j++) {
+                    grid[i][j] = new Patch();
+                }
             }
+        } else {
+            //If the switch of extension is on, also initialize the quality attribute
+            Random rand = new Random();
+            for (int i = 0; i < Params.EDGE; i++) {
+                for (int j = 0; j < Params.EDGE; j++) {
+                    grid[i][j] = new Patch();
+                    grid[i][j].setQuality(rand.nextDouble());
+                }
+            }
+            for (int i = 0; i < 5; i++) Util.diffuseQuality(grid, Params.DIFFUSION_RATIO);
         }
+
         // Initialize global temperature and black and white population record
         globalTempRecord = new ArrayList<>();
         blackPopulation = new ArrayList<>();
         whitePopulation = new ArrayList<>();
+        globalQualityRecord = new ArrayList<>();
         // Seed daisies
         seedDaisies(grid, this.startBlack, this.startWhite);
         absorb();
         recordGlobalTemp();
         recordPopulation();
+        recordGlobalQuality();
     }
 
     public ArrayList<Double> getGlobalTempRecord() {
@@ -65,6 +89,10 @@ public class DaisyWorld {
 
     public ArrayList<Integer> getWhitePopulation() {
         return whitePopulation;
+    }
+
+    public ArrayList<Double> getGlobalQualityRecord() {
+        return globalQualityRecord;
     }
 
     private void seedDaisies(Patch[][] grid, double percentOfBlack, double percentOfWhite) {
@@ -114,6 +142,17 @@ public class DaisyWorld {
         globalTempRecord.add(currentGlobalTemp);
     }
 
+    private void recordGlobalQuality() {
+        double totalQuality = 0;
+        for (int i = 0; i < Params.EDGE; i++) {
+            for (int j = 0; j < Params.EDGE; j++) {
+                totalQuality += grid[i][j].getQuality();
+            }
+        }
+        Double currentGlobalQuality = totalQuality / (Params.EDGE * Params.EDGE);
+        globalQualityRecord.add(currentGlobalQuality);
+    }
+
     private void recordPopulation() {
         int black = 0, white = 0;
         for (int i = 0; i < Params.EDGE; i++) {
@@ -148,11 +187,13 @@ public class DaisyWorld {
         }
     }
 
-    public void tick() {
+    public void tick(int mode) {
         // Absorb luminosity
         absorb();
         // Diffuse
         Util.diffuseTemperature(grid, Params.DIFFUSION_RATIO);
+        //If extension is enable also change the quality of patch (Mutual affect)
+        if (mode > 0) Util.changeQuality(grid, Params.CHANGE_BASE);
         // Age and check die
         age();
         // Regenerate
@@ -160,6 +201,7 @@ public class DaisyWorld {
         // Record global temperature and black and white population
         recordGlobalTemp();
         recordPopulation();
+        recordGlobalQuality();
     }
 
     public void printGrid() {
@@ -186,16 +228,17 @@ public class DaisyWorld {
         DaisyWorld earth = new DaisyWorld(
                 Params.START_BLACK, Params.START_WHITE,
                 Params.ALBEDO_OF_BLACk, Params.ALBEDO_OF_WHITE,
-                Params.ALBEDO_Of_SURFACE, Params.SOLAR_LUMINOSITY);
+                Params.ALBEDO_Of_SURFACE, Params.SOLAR_LUMINOSITY, Params.QUALITY_SWITCH, Params.CHANGE_BASE);
 //        earth.printGrid();
         for (int t = 0; t < Params.TICKS; t++) {
-            earth.tick();
+            earth.tick(Params.QUALITY_SWITCH);
 //            System.out.println();
 //            earth.printGrid();
         }
         ArrayList<Double> temp = earth.getGlobalTempRecord();
         ArrayList<Integer> black = earth.getBlackPopulation();
         ArrayList<Integer> white = earth.getWhitePopulation();
+        //Please also output quality here
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("data.csv"));
             for (Integer i = 0; i <= Params.TICKS; i++) {

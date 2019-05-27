@@ -73,7 +73,7 @@ public class Util {
         // Checks each patch for its regeneration
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                sprout(grid, sproutGrid, i, j);
+                sprout(grid, sproutGrid, i, j, grid[i][j].getQuality());
             }
         }
         // Applies the sprouted daisies to the original grid.
@@ -90,11 +90,11 @@ public class Util {
         }
     }
 
-    private static void sprout(Patch[][] grid, ArrayList<Daisy>[][] sproutGrid, int i, int j) {
+    private static void sprout(Patch[][] grid, ArrayList<Daisy>[][] sproutGrid, int i, int j, double quality) {
         double temperature = grid[i][j].getTemperature();
         double seedThreshold = (0.1457 * temperature) - (0.0032 * (temperature * temperature)) - 0.6443;
         Random random = new Random();
-        double survivability = random.nextDouble();
+        double survivability = random.nextDouble() * quality;
         Daisy parent = grid[i][j].getDaisy();
         if (parent != null && survivability < seedThreshold) {
             LinkedList<int[]> neighbors = new LinkedList<>();
@@ -115,6 +115,21 @@ public class Util {
                 Daisy babyDaisy = new Daisy(parent.getType(), parent.getAlbedo(), 0);
                 // Adds the baby to a list of baby candidates for that patch.
                 sproutGrid[sproutCoor[0]][sproutCoor[1]].add(babyDaisy);
+            }
+        }
+    }
+
+    public static void changeQuality(Patch[][] grid, double base) {
+        for (int i = 0; i < Params.EDGE; i++) {
+            for (int j = 0; j < Params.EDGE; j++) {
+                //Linear model, if the quality is good, it changed very slowly, if it is bad, it changed very fast.
+                double currentQuality = grid[i][j].getQuality();
+                double nonPrefectRate = 1 - currentQuality;
+                double delta = base * nonPrefectRate;
+                double newQuality;
+                if (grid[i][j].getDaisy() == null) newQuality = currentQuality - delta;
+                else newQuality = currentQuality + delta;
+                grid[i][j].setQuality(newQuality);
             }
         }
     }
