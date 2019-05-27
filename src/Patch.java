@@ -1,7 +1,6 @@
 /**
- * Patches store all the information about a ground,
- * which contains the daisy, temperature and how to
- * calculate the local temperature in each tick.
+ * Patches are the basis of the world. They store all the information about a ground,
+ * which contains the daisy, temperature and how to calculate the local temperature in each tick.
  */
 public class Patch {
     //the temperature of this patch
@@ -17,7 +16,11 @@ public class Patch {
         quality = 1;
     }
 
-    //calculate the temperature of this patch
+    /**
+     * Calculate the temperature of this patch after absorbing sun light.
+     * @param solarLuminosity
+     * @param albedoOfSurface
+     */
     public void calTemp(double solarLuminosity, double albedoOfSurface) {
         // the absorbed luminosity by this patch
         double absorbedLuminosity = 0;

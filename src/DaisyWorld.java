@@ -6,56 +6,44 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * DaisyWorld is a world filled with two different types of daisies:
- * black daisies and white daisies. They differ in albedo, which is
- * how much energy they absorb as heat from sunlight.
+ * This is the main class. Run the main method of this class to run the model and get results generated.
+ *
+ * DaisyWorld is a world filled with two different types of daisies: black daisies and white daisies.
+ * The basis of the world is a grid of patches. Each of the patches may or may not have a daisy grown.
+ * The world runs as a discrete fashion tick by tick. At each tick, daisies absorb light and heat,
+ * patches diffuse temperature, daisies die and reproduce, metrics are recorded.
+ *
+ * Results are printed and written to a csv file after the model run finishes.
  */
 public class DaisyWorld {
 
-    private double startBlack;
-    private double startWhite;
-
-    private double albedoOfBlack;
-    private double albedoOfWhite;
-    private double albedoOfSurface;
-    private double solarLuminosity;
-
-    private int extensionMode;
-    private double extensionParam;
-
+    // A grid of patches
     private Patch[][] grid;
+
+    // A list of global temperature for every tick
     private ArrayList<Double> globalTempRecord;
 
+    // A list of black population for every tick
     private ArrayList<Integer> blackPopulation;
 
+    // A list of white population for every tick
     private ArrayList<Integer> whitePopulation;
 
-    private ArrayList<Double> globalQualityRecord;
+    // A list of global soil quality for every tick
+    private ArrayList<Double> globalSoilQualityRecord;
 
-
-    // initialize the daisy world
-    public DaisyWorld(double startBlack, double startWhite, double albedoOfBlack,
-                      double albedoOfWhite, double albedoOfSurface, double solarLuminosity,
-                      int extensionMode, double extensionParam) {
-        this.startBlack = startBlack;
-        this.startWhite = startWhite;
-        this.albedoOfBlack = albedoOfBlack;
-        this.albedoOfWhite = albedoOfWhite;
-        this.albedoOfSurface = albedoOfSurface;
-        this.solarLuminosity = solarLuminosity;
-        this.extensionMode = extensionMode;
-        this.extensionParam = extensionParam;
+    // Initialize the daisy world
+    public DaisyWorld() {
         grid = new Patch[Params.EDGE][Params.EDGE];
         // Initialize grid
-
-        if (extensionMode == 0) {
+        if (Params.QUALITY_SWITCH == 0) {
             for (int i = 0; i < Params.EDGE; i++) {
                 for (int j = 0; j < Params.EDGE; j++) {
                     grid[i][j] = new Patch();
                 }
             }
         } else {
-            //If the switch of extension is on, also initialize the quality attribute
+            // If the switch of extension is on, also initialize the quality attribute
             Random rand = new Random();
             for (int i = 0; i < Params.EDGE; i++) {
                 for (int j = 0; j < Params.EDGE; j++) {
@@ -63,20 +51,22 @@ public class DaisyWorld {
                     grid[i][j].setQuality(rand.nextDouble() * Params.INITIAL_MAX_QUALITY);
                 }
             }
-            for (int i = 0; i < 20; i++) Util.diffuseQuality(grid, Params.DIFFUSION_RATIO);
+            // Diffuse for 20 rounds after randomly initializing soil quality to maintain the gradual change in soil quality
+            for (int i = 0; i < 20; i++) Util.diffuseSoilQuality(grid, Params.DIFFUSION_RATIO);
         }
 
         // Initialize global temperature and black and white population record
         globalTempRecord = new ArrayList<>();
         blackPopulation = new ArrayList<>();
         whitePopulation = new ArrayList<>();
-        globalQualityRecord = new ArrayList<>();
+        globalSoilQualityRecord = new ArrayList<>();
         // Seed daisies
-        seedDaisies(grid, this.startBlack, this.startWhite);
+        seedDaisies(grid, Params.START_BLACK, Params.START_WHITE);
+        // First round absorb and recording results
         absorb();
         recordGlobalTemp();
         recordPopulation();
-        recordGlobalQuality();
+        recordGlobalSoilQuality();
     }
 
     public ArrayList<Double> getGlobalTempRecord() {
@@ -91,13 +81,19 @@ public class DaisyWorld {
         return whitePopulation;
     }
 
-    public ArrayList<Double> getGlobalQualityRecord() {
-        return globalQualityRecord;
+    public ArrayList<Double> getGlobalSoilQualityRecord() {
+        return globalSoilQualityRecord;
     }
 
+    /**
+     * Randomly initialize daisies in the grid of patches with the given black and white percentages.
+     * @param grid
+     * @param percentOfBlack
+     * @param percentOfWhite
+     */
     private void seedDaisies(Patch[][] grid, double percentOfBlack, double percentOfWhite) {
         LinkedList<int[]> remainingSpace = new LinkedList<>();
-        //initialize the remainingSpace as a list of 2-int-arrays, each of which represents a patch coordinate in the grid
+        // Initialize the remainingSpace as a list of 2-int-arrays, each of which represents a patch coordinate in the grid
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
                 remainingSpace.add(new int[]{i, j});
@@ -107,10 +103,18 @@ public class DaisyWorld {
         int numberOfSpaces = Params.EDGE * Params.EDGE;
         int numOfBlack = (int) (percentOfBlack * numberOfSpaces);
         int numOfWhite = (int) (percentOfWhite * numberOfSpaces);
-        randomlySeed(grid, remainingSpace, numOfBlack, Daisy.DaisyType.BLACK, albedoOfBlack);
-        randomlySeed(grid, remainingSpace, numOfWhite, Daisy.DaisyType.WHITE, albedoOfWhite);
+        randomlySeed(grid, remainingSpace, numOfBlack, Daisy.DaisyType.BLACK, Params.ALBEDO_OF_BLACk);
+        randomlySeed(grid, remainingSpace, numOfWhite, Daisy.DaisyType.WHITE, Params.ALBEDO_OF_WHITE);
     }
 
+    /**
+     * Randomly seed one type of daisies with the remainingSpace and numberOfDaisies of that type
+     * @param grid
+     * @param remainingSpace
+     * @param numberOfDaisies
+     * @param type
+     * @param albedo
+     */
     private void randomlySeed(Patch[][] grid, LinkedList<int[]> remainingSpace, int numberOfDaisies, Daisy.DaisyType type, double albedo) {
         Random random = new Random();
         while (numberOfDaisies > 0) {
@@ -123,14 +127,20 @@ public class DaisyWorld {
         }
     }
 
+    /**
+     * Each patch absorbs light and heat from the sun
+     */
     private void absorb() {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                grid[i][j].calTemp(solarLuminosity, albedoOfSurface);
+                grid[i][j].calTemp(Params.SOLAR_LUMINOSITY, Params.ALBEDO_Of_SURFACE);
             }
         }
     }
 
+    /**
+     * Record the global temperature of the current tick
+     */
     private void recordGlobalTemp() {
         double totalTemperature = 0;
         for (int i = 0; i < Params.EDGE; i++) {
@@ -142,17 +152,23 @@ public class DaisyWorld {
         globalTempRecord.add(currentGlobalTemp);
     }
 
-    private void recordGlobalQuality() {
-        double totalQuality = 0;
+    /**
+     * Record the global soil quality of the current tick
+     */
+    private void recordGlobalSoilQuality() {
+        double totalSoilQuality = 0;
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                totalQuality += grid[i][j].getQuality();
+                totalSoilQuality += grid[i][j].getQuality();
             }
         }
-        Double currentGlobalQuality = totalQuality / (Params.EDGE * Params.EDGE);
-        globalQualityRecord.add(currentGlobalQuality);
+        Double currentGlobalQuality = totalSoilQuality / (Params.EDGE * Params.EDGE);
+        globalSoilQualityRecord.add(currentGlobalQuality);
     }
 
+    /**
+     * Record black and white population of the current tick
+     */
     private void recordPopulation() {
         int black = 0, white = 0;
         for (int i = 0; i < Params.EDGE; i++) {
@@ -171,6 +187,9 @@ public class DaisyWorld {
         whitePopulation.add(white);
     }
 
+    /**
+     * Each daisy ages and dies if reaches the maximum age
+     */
     private void age() {
         // Age and die
         for (int i = 0; i < Params.EDGE; i++) {
@@ -187,6 +206,12 @@ public class DaisyWorld {
         }
     }
 
+    /**
+     * At each tick, all patches absorb energy from the sun, diffuse temperature synchronously;
+     * all daisies age and die if necessary, and reproduce synchronously. mode is used to check
+     * if the option of soil quality is on.
+     * @param mode
+     */
     public void tick(int mode) {
         // Absorb luminosity
         absorb();
@@ -194,19 +219,24 @@ public class DaisyWorld {
         Util.diffuseTemperature(grid, Params.DIFFUSION_RATIO);
         //If extension is enable also change the quality of patch (Mutual affect)
         if (mode > 0) {
-            Util.diffuseQuality(grid, Params.DIFFUSION_RATIO);
+            Util.diffuseSoilQuality(grid, Params.DIFFUSION_RATIO);
             Util.changeQuality(grid, Params.CHANGE_BASE);
         }
         // Age and check die
         age();
-        // Regenerate
-        Util.reProduct(grid);
+        // Reproduce
+        Util.reproduce(grid);
         // Record global temperature and black and white population
         recordGlobalTemp();
         recordPopulation();
-        recordGlobalQuality();
+        recordGlobalSoilQuality();
     }
 
+    /**
+     * Print the DaisyWorld to the standard output. Black circles means black daisies,
+     * white circles means white daisies, empty means no daisies. Numeric number of each patch
+     * represents the temperature of that patch.
+     */
     public void printGrid() {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
@@ -225,24 +255,25 @@ public class DaisyWorld {
             }
             System.out.println();
         }
+        System.out.println();
     }
 
+    /**
+     * Main method, entry point of the program.
+     * @param args
+     */
     public static void main(String[] args) {
-        DaisyWorld earth = new DaisyWorld(
-                Params.START_BLACK, Params.START_WHITE,
-                Params.ALBEDO_OF_BLACk, Params.ALBEDO_OF_WHITE,
-                Params.ALBEDO_Of_SURFACE, Params.SOLAR_LUMINOSITY, Params.QUALITY_SWITCH, Params.CHANGE_BASE);
-//        earth.printGrid();
+        DaisyWorld earth = new DaisyWorld();
+//        earth.printGrid();        // Uncomment to print the initial grid
         for (int t = 0; t < Params.TICKS; t++) {
             earth.tick(Params.QUALITY_SWITCH);
-//            System.out.println();
-//            earth.printGrid();
+//            earth.printGrid();    // Uncomment to print the grid each tick
         }
-        earth.printGrid();
+        earth.printGrid();          // Print the grid of final tick
         ArrayList<Double> temp = earth.getGlobalTempRecord();
         ArrayList<Integer> black = earth.getBlackPopulation();
         ArrayList<Integer> white = earth.getWhitePopulation();
-        ArrayList<Double> quality = earth.getGlobalQualityRecord();
+        ArrayList<Double> quality = earth.getGlobalSoilQualityRecord();
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("data.csv"));
             for (Integer i = 0; i <= Params.TICKS; i++) {
