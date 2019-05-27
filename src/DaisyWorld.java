@@ -193,7 +193,10 @@ public class DaisyWorld {
         // Diffuse
         Util.diffuseTemperature(grid, Params.DIFFUSION_RATIO);
         //If extension is enable also change the quality of patch (Mutual affect)
-        if (mode > 0) Util.changeQuality(grid, Params.CHANGE_BASE);
+        if (mode > 0) {
+            Util.diffuseQuality(grid, Params.DIFFUSION_RATIO);
+            Util.changeQuality(grid, Params.CHANGE_BASE);
+        }
         // Age and check die
         age();
         // Regenerate
@@ -239,7 +242,6 @@ public class DaisyWorld {
         ArrayList<Integer> black = earth.getBlackPopulation();
         ArrayList<Integer> white = earth.getWhitePopulation();
         ArrayList<Double> quality = earth.getGlobalQualityRecord();
-        //Please also output quality here
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("data.csv"));
             for (Integer i = 0; i <= Params.TICKS; i++) {
