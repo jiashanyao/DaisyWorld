@@ -1,8 +1,8 @@
 public class Params {
     // initial percentage of black daisies
-    public static double START_BLACK = 0.1;
+    public static double START_BLACK = 0.2;
     // initial percentage of white daisies
-    public static double START_WHITE = 0.1;
+    public static double START_WHITE = 0.2;
 
     public static double ALBEDO_OF_WHITE = 0.75;
     public static double ALBEDO_OF_BLACk = 0.25;
@@ -26,7 +26,7 @@ public class Params {
     //Extension switch and parameters
 
     //Main switch, off = 0; on = 1.
-    public static int QUALITY_SWITCH = 1;
+    public static int QUALITY_SWITCH = 0;
     //Change base, the change will dependent on product of base and current non-perfect degree.
     public static double CHANGE_BASE = .1;
     /* At the beginning the best quality of soil among patches. For a common environment should be ~ 1 and

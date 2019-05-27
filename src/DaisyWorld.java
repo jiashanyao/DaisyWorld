@@ -238,6 +238,7 @@ public class DaisyWorld {
 //            System.out.println();
 //            earth.printGrid();
         }
+        earth.printGrid();
         ArrayList<Double> temp = earth.getGlobalTempRecord();
         ArrayList<Integer> black = earth.getBlackPopulation();
         ArrayList<Integer> white = earth.getWhitePopulation();

@@ -63,13 +63,14 @@ public class Util {
             for (int j = 0; j < Params.EDGE; j++) {
                 double currentQuality = grid[i][j].getQuality();
                 //If it becomes sand, it will never go back
-                if (currentQuality > Params.DEATH_LINE) {
-                    double newQuality = currentQuality * (1 - diffusionRatio) + gridDelta[i][j];
-                    grid[i][j].setQuality(newQuality);
-                }
+                double newQuality = 0;
+                if (currentQuality > Params.DEATH_LINE)
+                    newQuality = currentQuality * (1 - diffusionRatio) + gridDelta[i][j];
+                grid[i][j].setQuality(newQuality);
             }
         }
     }
+
 
     public static void reProduct(Patch[][] grid) {
         // Records sprout candidates of an open patch (a list consisting black and/or white daisies)
