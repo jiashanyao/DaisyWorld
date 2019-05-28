@@ -19,7 +19,7 @@ One can change the parameter value in the file and then recompile `DaisyWorld.ja
 different model behaviour.
 ### Turn on Extension
 An extension of adding the soil quality attribute to the environment can be turned on by setting
-variable `QUALITY_SWITCH` to `1` in file `Params.java`.
+variable `QUALITY_SWITCH` to `1` in file `Params.java` and recompiling the program.
 
 ## Collect the Results
 Apart from a world visualization of the final tick, key model variables of each tick is recorded
