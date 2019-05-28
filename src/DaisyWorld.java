@@ -49,7 +49,7 @@ public class DaisyWorld {
             for (int i = 0; i < Params.EDGE; i++) {
                 for (int j = 0; j < Params.EDGE; j++) {
                     grid[i][j] = new Patch();
-                    grid[i][j].setQuality(rand.nextDouble() * Params.INITIAL_MAX_QUALITY);
+                    grid[i][j].setSoilQuality(rand.nextDouble() * Params.INITIAL_MAX_QUALITY);
                 }
             }
             // Diffuse for 20 rounds after randomly initializing soil quality to maintain
@@ -166,7 +166,7 @@ public class DaisyWorld {
         double totalSoilQuality = 0;
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                totalSoilQuality += grid[i][j].getQuality();
+                totalSoilQuality += grid[i][j].getSoilQuality();
             }
         }
         Double currentGlobalQuality = totalSoilQuality / (Params.EDGE * Params.EDGE);

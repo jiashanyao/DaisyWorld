@@ -47,7 +47,7 @@ public class Util {
         // Calculate the soil quality change for each patch
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++)
-                calculateShares(grid[i][j].getQuality(), gridDelta, i, j, diffusionRatio);
+                calculateShares(grid[i][j].getSoilQuality(), gridDelta, i, j, diffusionRatio);
         }
         // Add the soil quality change to the left soil quality after diffusion
         applyQualityShares(gridDelta, grid, diffusionRatio);
@@ -107,12 +107,12 @@ public class Util {
                                            double diffusionRatio) {
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                double currentQuality = grid[i][j].getQuality();
+                double currentQuality = grid[i][j].getSoilQuality();
                 //If it becomes sand, it will never go back
                 double newQuality = 0;
                 if (currentQuality > Params.DEATH_LINE)
                     newQuality = currentQuality * (1 - diffusionRatio) + gridDelta[i][j];
-                grid[i][j].setQuality(newQuality);
+                grid[i][j].setSoilQuality(newQuality);
             }
         }
     }
@@ -130,7 +130,7 @@ public class Util {
         // Check each patch for its regeneration
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                sprout(grid, sproutGrid, i, j, grid[i][j].getQuality());
+                sprout(grid, sproutGrid, i, j, grid[i][j].getSoilQuality());
             }
         }
         // Apply the sprouted daisies to the original grid.
@@ -138,7 +138,7 @@ public class Util {
         Random random = new Random();
         for (int i = 0; i < Params.EDGE; i++) {
             for (int j = 0; j < Params.EDGE; j++) {
-                if (grid[i][j].getDaisy() == null && sproutGrid[i][j] != null && grid[i][j].getQuality() > 0) {
+                if (grid[i][j].getDaisy() == null && sproutGrid[i][j] != null && grid[i][j].getSoilQuality() > 0) {
                     // Randomly chooses a baby candidate
                     Daisy babyDaisy = sproutGrid[i][j].get(random.nextInt(sproutGrid[i][j].size()));
                     grid[i][j].setDaisy(babyDaisy);
@@ -206,7 +206,7 @@ public class Util {
             for (int j = 0; j < Params.EDGE; j++) {
                 //Linear model, if the quality is good, it changed very slowly,
                 // if it is bad, it changed very fast.
-                double currentQuality = grid[i][j].getQuality();
+                double currentQuality = grid[i][j].getSoilQuality();
                 double nonPrefectRate = 1 - currentQuality;
                 double decreasePossible = Params.CHANGE_BASE * nonPrefectRate;
                 double increasePossible = Params.CHANGE_BASE * currentQuality;
@@ -214,7 +214,7 @@ public class Util {
                 if (grid[i][j].getDaisy() == null)
                     newQuality = Math.max(0, currentQuality - decreasePossible);
                 else newQuality = Math.min(1, currentQuality + increasePossible);
-                grid[i][j].setQuality(newQuality);
+                grid[i][j].setSoilQuality(newQuality);
             }
         }
     }

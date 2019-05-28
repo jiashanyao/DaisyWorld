@@ -18,7 +18,7 @@ public class Params {
     public static int MAX_AGE = 25;
 
     // the solar luminosity in different scenarios
-    public static Double SOLAR_LUMINOSITY = 1.0;
+    public static double SOLAR_LUMINOSITY = 1.0;
 
     // max ticks of the daisy world
     public static int TICKS = 1000;
@@ -32,7 +32,7 @@ public class Params {
     /* Extension switch and parameters */
 
     //Main switch of extension, off = 0; on = 1.
-    public static int QUALITY_SWITCH = 1;
+    public static int QUALITY_SWITCH = 0;
 
     //Change base, the change will dependent on product of base and current non-perfect degree.
     public static double CHANGE_BASE = .1;

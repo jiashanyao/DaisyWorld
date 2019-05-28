@@ -5,15 +5,15 @@
 public class Patch {
     //the temperature of this patch
     private double temperature;
-    //the quality of this patch
-    private double quality;
+    //the soilQuality of this patch
+    private double soilQuality;
     //the daisy on this patch
     private Daisy daisy;
 
     public Patch(){
         temperature = 0;
         daisy = null;
-        quality = 1;
+        soilQuality = 1;
     }
 
     /**
@@ -59,15 +59,15 @@ public class Patch {
         return temperature;
     }
 
-    public double getQuality() {
-        return quality;
+    public double getSoilQuality() {
+        return soilQuality;
     }
 
     public void setTemperature(double temperature) {
         this.temperature = temperature;
     }
 
-    public void setQuality(double quality) {
-        this.quality = quality;
+    public void setSoilQuality(double soilQuality) {
+        this.soilQuality = soilQuality;
     }
 }
