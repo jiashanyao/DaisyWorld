@@ -14,12 +14,12 @@ A solid circle means a black daisy. An empty circle means a white daisy. No circ
 A number in each patch indicates the local temperature.
 
 ## Change Model Parameters
-For simplicity and clarity, all model parameters are written in class `Params` in `Params.java`.
+For simplicity and clarity, all model parameters are written in class Params in `Params.java`.
 One can change the parameter value in the file and then recompile `DaisyWorld.java` to observe
 different model behaviour.
 ### Turn on Extension
 An extension of adding the soil quality attribute to the environment can be turned on by setting
-variable `QUALITY_SWITCH` to `1` in class `Paras`.
+variable `QUALITY_SWITCH` to `1` in file `Params.java`.
 
 ## Collect the Results
 Apart from a world visualization of the final tick, key model variables of each tick is recorded
