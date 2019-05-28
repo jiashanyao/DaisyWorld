@@ -123,6 +123,7 @@ public class Util {
      *
      * @param grid A grid of patches represented by a 2-dimension array
      */
+    @SuppressWarnings("unchecked")
     public static void reproduce(Patch[][] grid) {
         // A grid that records sprout candidates of each open patch (a list consisting black
         // and/or white daisies)

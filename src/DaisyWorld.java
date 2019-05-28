@@ -327,9 +327,5 @@ public class DaisyWorld {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Global Temperature " + temp);
-        System.out.println("Black Population " + black);
-        System.out.println("White Population " + white);
-        System.out.println("Global Soil Quality " + quality);
     }
 }
