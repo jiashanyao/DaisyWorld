@@ -1,4 +1,5 @@
-# DaisyWorld - SWEN90004 Assignment 2
+# DaisyWorld
+This is part of the delivery of unimelb SWEN90004 Assignment 2.
 ## Run the DaisyWorld Model
 Compile the java program by:
 ```
