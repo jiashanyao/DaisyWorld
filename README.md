@@ -1,4 +1,4 @@
-# SWEN90004 Assignment 2
+# DaisyWorld - SWEN90004 Assignment 2
 ## Run the DaisyWorld Model
 Compile the java program by:
 ```
